@@ -19,7 +19,7 @@ export const ws = (function () {
             }
         },
 
-        sendCommand: function (command: Command) {
+        sendCommand: (command: Command) => {
 
             const parsedPayload = JSON.stringify(command);
             socket.send(parsedPayload);
@@ -29,7 +29,7 @@ export const ws = (function () {
             return socket;
         },
 
-        onCommand: function (command: Commands, func: (command: Command) => void) {
+        onCommand: (command: Commands, func: (command: Command) => void) => {
 
             const listener = function (e: MessageEvent) {
 

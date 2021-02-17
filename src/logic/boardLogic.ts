@@ -1,25 +1,25 @@
-import { BoardProps } from "../Board";
-import { TileProps, TileSymbols } from "../Tile";
+// import { BoardState } from "../Board";
+import { BoardData, TileData, TileSymbols } from "../types";
 
 type tileDescriptor = 'color' | 'symbol';
 type coordinatesTypes = 'x' | 'y';
 
-export function executeDrop(tileToChange: TileProps, data: TileProps, board: BoardProps, setBoard: React.Dispatch<React.SetStateAction<BoardProps>>) {
-    tileToChange.color = data.color;
-    tileToChange.symbol = data.symbol;
+// export function executeDrop(tileToChange: TileData, data: TileData, boardData: BoardState, setBoard: React.Dispatch<React.SetStateAction<BoardState>>) {
+//     tileToChange.color = data.color;
+//     tileToChange.symbol = data.symbol;
 
-    let sizeY = board.sizeY;
-    let sizeX = board.sizeX;
+//     let sizeY = boardData.board.sizeY;
+//     let sizeX = boardData.board.sizeX;
 
-    sizeY = checkBoardSize('y', tileToChange, board, sizeX, sizeY);
-    sizeX = checkBoardSize('x', tileToChange, board, sizeX, sizeY);
+//     sizeY = checkBoardSize('y', tileToChange, boardData.board, sizeX, sizeY);
+//     sizeX = checkBoardSize('x', tileToChange, boardData.board, sizeX, sizeY);
 
-    setBoard(() => {
-        return { ...board, sizeY: sizeY, sizeX: sizeX };
-    });
-}
+//     setBoard(() => {
+//         return { ...boardData, board: { ...boardData.board, sizeY: sizeY, sizeX: sizeX } };
+//     });
+// }
 
-export function checkBoardSize(directionToCheck: 'x' | 'y', tileToChange: TileProps, board: BoardProps, sizeX: number, sizeY: number) {
+export function checkBoardSize(directionToCheck: 'x' | 'y', tileToChange: TileData, board: BoardData, sizeX: number, sizeY: number) {
 
     let sizeForDirection = directionToCheck === 'x' ? sizeX : sizeY;
     const oppositeSize = directionToCheck === 'x' ? sizeY : sizeX;
@@ -65,9 +65,9 @@ export function checkBoardSize(directionToCheck: 'x' | 'y', tileToChange: TilePr
     return sizeForDirection;
 }
 
-export const findMatchingTilesByCheckingNeighbours = (tileToSearch: TileProps, color: number | undefined, symbol: number | undefined, tiles: TileProps[]) => {
+export const findMatchingTilesByCheckingNeighbours = (tileToSearch: TileData, color: number | undefined, symbol: number | undefined, tiles: TileData[]) => {
 
-    const tilesCol: TileProps[] = [
+    const tilesCol: TileData[] = [
         ...findNeighboursForDirection('y', tileToSearch, tiles, 1),
         ...findNeighboursForDirection('y', tileToSearch, tiles, -1)
     ];
@@ -79,7 +79,7 @@ export const findMatchingTilesByCheckingNeighbours = (tileToSearch: TileProps, c
     var matchesForSymbolForCol = listPossiblesMatches(tilesCol, 'symbol');
     var matchesForCol = [...matchesForColorForCol, ...matchesForSymbolForCol];
 
-    const tilesRow: TileProps[] = [
+    const tilesRow: TileData[] = [
         ...findNeighboursForDirection('x', tileToSearch, tiles, 1),
         ...findNeighboursForDirection('x', tileToSearch, tiles, -1)
     ];
@@ -98,7 +98,7 @@ export const findMatchingTilesByCheckingNeighbours = (tileToSearch: TileProps, c
     return tileFitsInSeries(matchesForCol, color, symbol) && tileFitsInSeries(matchesForRow, color, symbol);
 }
 
-const listPossiblesMatches = (tileSeries: TileProps[], typeToCheck: tileDescriptor) => {
+const listPossiblesMatches = (tileSeries: TileData[], typeToCheck: tileDescriptor) => {
 
     if (tileSeries.length === 0) {
         return [];
@@ -131,12 +131,12 @@ const listPossiblesMatches = (tileSeries: TileProps[], typeToCheck: tileDescript
     return [];
 }
 
-const findNeighboursForDirection = (directionToCheck: coordinatesTypes, tileToSearch: TileProps, tiles: TileProps[], factor: number) => {
+const findNeighboursForDirection = (directionToCheck: coordinatesTypes, tileToSearch: TileData, tiles: TileData[], factor: number) => {
 
     const directionValue = tileToSearch[directionToCheck];
     const oppositeDirection: coordinatesTypes = directionToCheck === 'x' ? 'y' : 'x';
     const oppositeDirectionValue = tileToSearch[oppositeDirection];
-    const retVal: TileProps[] = [];
+    const retVal: TileData[] = [];
 
     for (let i = 1; i < 6; i++) {
 

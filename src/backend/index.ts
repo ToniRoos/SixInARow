@@ -1,6 +1,7 @@
 import * as WebSocket from "ws";
+import { findMatchingTilesByCheckingNeighbours } from "../logic/boardLogic";
 import { stock } from "../logic/stock";
-import { Command, Commands, SessionId } from "../types";
+import { Command, SessionId, TileData } from "../types";
 import { createUUID } from "./helper";
 
 const wss = new WebSocket.Server({ port: 8080 });
@@ -14,6 +15,7 @@ export interface UserSessionData extends SessionId {
 wss.on('connection', function connection(ws: WebSocket) {
 
     let id: string;
+    let tilesOnTurn: TileData[] = [];
 
     try {
         ws.on('message', (message: string) => {
@@ -39,9 +41,61 @@ wss.on('connection', function connection(ws: WebSocket) {
                     break;
                 case 'StartGame':
 
-                    stock.createInitalStock();
-                    setDataToAllClients({ command: 'StartGame' });
+                    const initalBoard = stock.createGame();
+                    // setDataToAllClients({ command: 'StartGame' });
+
+                    const tiles = stock.getNextTiles(6 * userStore.length);
+                    console.log(`##### tiles: ${JSON.stringify(tiles)}`);
+
+                    userStore.forEach(item => {
+
+                        sendCommand(item.ws, { command: 'StartGame', data: { tilesOnHand: tiles.splice(0, 6), board: initalBoard } });
+                    });
                     console.log(`start game`);
+
+                    break;
+                case 'GetTiles':
+
+                    // const tiles = stock.getNextTiles(6);
+                    // sendCommand(ws, { command: 'GetTiles', id: id, data: tiles });
+                    console.log(`get tiles`);
+
+                    break;
+                case 'CheckMove':
+
+                    console.log(`check move`);
+
+                    const tileToMove: TileData = dataParsed.data;
+                    const tileOnBoard = stock.getTileForCoordinates(tileToMove);
+
+                    const tileMatches = findMatchingTilesByCheckingNeighbours(tileOnBoard, tileToMove.color, tileToMove.symbol, stock.getTilesOfGame());
+                    if (!tileMatches) {
+                        return;
+                    }
+
+                    const tilesOnTurnSize = tilesOnTurn.length;
+                    if (tilesOnTurnSize === 1
+                        && tileOnBoard.x !== tilesOnTurn[0].x
+                        && tileOnBoard.y !== tilesOnTurn[0].y) {
+                        return;
+                    }
+
+                    const numberInRow = tilesOnTurn.filter(item => item.x === tileOnBoard.x).length;
+                    const numberInCol = tilesOnTurn.filter(item => item.y === tileOnBoard.y).length;
+                    if (tilesOnTurnSize > 1
+                        && numberInRow !== tilesOnTurnSize
+                        && numberInCol !== tilesOnTurnSize) {
+
+                        return;
+                    }
+
+                    tilesOnTurn.push(tileOnBoard);
+                    const gameData = stock.executeMove(tileOnBoard, tileToMove);
+
+                    userStore.forEach(item => {
+
+                        sendCommand(item.ws, { command: 'RefreshBoard', data: gameData });
+                    });
 
                     break;
                 default:
@@ -75,7 +129,7 @@ function removeSession(id: string) {
     }
 }
 
-function setDataToAllClients(command: Command) {
+const setDataToAllClients = (command: Command) => {
     userStore.forEach(item => {
         if (item.ws.readyState === item.ws.OPEN) {
             sendCommand(item.ws, command);

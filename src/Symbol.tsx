@@ -1,22 +1,5 @@
 import React from "react";
-
-export enum ColorEnum {
-    blue = 1,
-    green = 2,
-    orange = 3,
-    yellow = 4,
-    red = 5,
-    purple = 6
-}
-
-export enum SymbolEnum {
-    square = 1,
-    circle = 2,
-    star1 = 3,
-    hash = 4,
-    leaf = 5,
-    star2 = 6
-}
+import { SymbolEnum, ColorEnum } from "./types";
 
 export const drawSymbol = (symbol?: SymbolEnum, color?: ColorEnum) => {
 

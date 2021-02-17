@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Board from './Board';
+import Board, { BoardProps } from './Board';
 import { ws } from './logic/ws';
 import Login from './Login';
 import { color1, Command } from './types';
@@ -15,11 +15,16 @@ const Main = () => {
         ws.getSocket().onmessage = (e) => {
             console.log('##########');
             const dataParsed: Command = JSON.parse(e.data);
+
             if (dataParsed.command === 'SetId') {
                 setPage(() => <Waiting />);
                 setId(() => dataParsed.data);
             } else if (dataParsed.command === 'StartGame') {
-                setPage(() => <Board />);
+
+                (dataParsed.data as BoardProps).tilesOnHand.forEach((tile, i) => {
+                    tile.id = i;
+                });
+                setPage(() => <Board {...dataParsed.data} />);
             }
         }
 
@@ -30,7 +35,9 @@ const Main = () => {
     }, []);
 
     return <div className={`vh-100 d-flex flex-column align-items-center justify-content-center bg-${color1}`}>
+
         {page}
+
     </div>
 }
 

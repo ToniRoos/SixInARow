@@ -1,16 +1,8 @@
 import * as React from 'react';
-import { ColorEnum, drawSymbol, SymbolEnum } from './Symbol';
+import { drawSymbol } from './Symbol';
+import { TileData } from './types';
 
-export interface TileSymbols {
-    id?: number;
-    color?: ColorEnum;
-    symbol?: SymbolEnum;
-}
-
-export interface TileProps extends TileSymbols {
-    x: number;
-    y: number;
-    allowDrag?: boolean;
+export interface TileProps extends TileData {
     tileSize?: number;
     onDropped?: (props: TileProps) => void;
 }
