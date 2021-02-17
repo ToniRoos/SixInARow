@@ -1,21 +1,9 @@
 import * as React from 'react';
-// import { executeDrop, findMatchingTilesByCheckingNeighbours } from './logic/boardLogic';
 import { ws } from './logic/ws';
 import Tile, { TileProps } from './Tile';
 import { BoardData, TileSymbols } from './types';
 
 const intialStateForBoard = () => {
-
-    // const initalSize = 3;
-    // const retVal: TileProps[] = [];
-    // for (let i = 0; i < initalSize; i++) {
-    //     for (let j = 0; j < initalSize; j++) {
-    //         retVal.push({
-    //             x: j,
-    //             y: i
-    //         })
-    //     }
-    // }
 
     return {
         tiles: [],
@@ -28,6 +16,8 @@ const intialStateForBoard = () => {
 };
 
 export interface BoardState {
+    turnActive: boolean;
+    activePlayer: string;
     board: BoardData;
     tileSize: number;
     tilesOnHand: TileSymbols[];
@@ -36,6 +26,8 @@ export interface BoardState {
 
 export interface BoardProps {
     tilesOnHand: TileSymbols[];
+    activePlayer: string;
+    turnActive: boolean;
     board: BoardData;
 }
 
@@ -46,8 +38,8 @@ const Board = (props: BoardProps) => {
     React.useEffect(() => {
 
         ws.onCommand('RefreshBoard', (command) => {
-            console.log(JSON.stringify(command.data));
-            setGameData({ ...gameData, board: command.data })
+
+            setGameData({ ...gameData, ...command.data })
         });
         // ws.sendCommand({ command: 'GetTiles' });
     }, []);
@@ -55,32 +47,6 @@ const Board = (props: BoardProps) => {
     const checkDrop = (data: TileProps) => {
 
         ws.sendCommand({ command: 'CheckMove', data: data });
-        // const tileToChange = gameData.board.tiles.filter(item => item.x === data.x && item.y === data.y)[0];
-
-        // const tileMatches = findMatchingTilesByCheckingNeighbours(tileToChange, data.color, data.symbol, gameData.board.tiles);
-        // if (!tileMatches) {
-        //     return;
-        // }
-
-        // const tilesOnTurnSize = gameData.tilesOnTurn.length;
-        // if (tilesOnTurnSize === 1
-        //     && tileToChange.x !== gameData.tilesOnTurn[0].x
-        //     && tileToChange.y !== gameData.tilesOnTurn[0].y) {
-        //     return;
-        // }
-
-        // const numberInRow = gameData.tilesOnTurn.filter(item => item.x === tileToChange.x).length;
-        // const numberInCol = gameData.tilesOnTurn.filter(item => item.y === tileToChange.y).length;
-        // if (tilesOnTurnSize > 1
-        //     && numberInRow !== tilesOnTurnSize
-        //     && numberInCol !== tilesOnTurnSize) {
-
-        //     return;
-        // }
-
-        // gameData.tilesOnHand = gameData.tilesOnHand.filter(item => item.id !== data.id);
-        // gameData.tilesOnTurn.push(tileToChange);
-        // executeDrop(tileToChange, data, gameData, setGameData);
     }
 
     const boardRendered = gameData.board.tiles.map((tileData, index) => <Tile key={index}
@@ -89,10 +55,13 @@ const Board = (props: BoardProps) => {
         allowDrag={false}
         onDropped={checkDrop} />)
 
-    // TODO implement random tiles for a turn
-    const tilesOnHandRendered = gameData.tilesOnHand.map((tile, index) => <Tile key={index} x={index} y={0} allowDrag={true} {...tile} />);
+    const tilesOnHandRendered = gameData.tilesOnHand.map((tile, index) => <Tile key={index} x={index} y={0} allowDrag={gameData.turnActive} {...tile} />);
 
     return <div className="vh-100 d-flex flex-column align-items-center">
+
+        <div className="alert alert-info m-2 bg-success text-white" role="alert">
+            {gameData.turnActive ? "It's your turn" : `Turn of ${gameData.activePlayer}`}
+        </div>
 
         <div className="d-flex flex-grow-1 align-items-center" style={{ paddingBottom: "110px" }}>
             <div className="d-flex flex-wrap"
@@ -102,6 +71,9 @@ const Board = (props: BoardProps) => {
         </div>
         <div style={{ width: "600px", height: "100px", position: "fixed", bottom: "0" }} className="d-flex flex-wrap">
             {tilesOnHandRendered}
+            {gameData.turnActive ? <button type="button" className="btn btn-outline-success" style={{ marginLeft: "620px" }}>
+                NEXT
+            </button> : undefined}
         </div>
 
     </div>

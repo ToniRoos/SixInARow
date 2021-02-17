@@ -21,23 +21,13 @@ const Main = () => {
                 setId(() => dataParsed.data);
             } else if (dataParsed.command === 'StartGame') {
 
-                (dataParsed.data as BoardProps).tilesOnHand.forEach((tile, i) => {
-                    tile.id = i;
-                });
                 setPage(() => <Board {...dataParsed.data} />);
             }
         }
-
-        // ws.onCommand('SetId', (command) => {
-        //     console.log('##########');
-        //     setPage(() => <Waiting />);
-        // })
     }, []);
 
     return <div className={`vh-100 d-flex flex-column align-items-center justify-content-center bg-${color1}`}>
-
         {page}
-
     </div>
 }
 

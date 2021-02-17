@@ -53,4 +53,4 @@ export interface BoardData {
 }
 
 export const color1 = "warning";
-export const color2 = "info";
+export const color2 = "success";

@@ -1,15 +1,16 @@
 import * as WebSocket from "ws";
 import { findMatchingTilesByCheckingNeighbours } from "../logic/boardLogic";
 import { stock } from "../logic/stock";
-import { Command, SessionId, TileData } from "../types";
+import { Command, SessionId, TileData, TileSymbols } from "../types";
 import { createUUID } from "./helper";
 
 const wss = new WebSocket.Server({ port: 8080 });
 const userStore: UserSessionData[] = [];
-
 export interface UserSessionData extends SessionId {
     name: string;
     ws: WebSocket;
+    tilesOnHand: TileSymbols[];
+    turnActive: boolean;
 }
 
 wss.on('connection', function connection(ws: WebSocket) {
@@ -27,7 +28,9 @@ wss.on('connection', function connection(ws: WebSocket) {
                     userStore.push({
                         id: id,
                         name: dataParsed.data,
-                        ws: ws
+                        ws: ws,
+                        tilesOnHand: [],
+                        turnActive: false
                     })
                     sendCommand(ws, { command: 'SetId', id: id });
                     console.log(`added id for user: ${dataParsed.data}, id: ${id}`);
@@ -42,14 +45,30 @@ wss.on('connection', function connection(ws: WebSocket) {
                 case 'StartGame':
 
                     const initalBoard = stock.createGame();
-                    // setDataToAllClients({ command: 'StartGame' });
+                    const startTilesForAllPlayers = stock.getNextTiles(6 * userStore.length);
+                    let activePlayer = "";
 
-                    const tiles = stock.getNextTiles(6 * userStore.length);
-                    console.log(`##### tiles: ${JSON.stringify(tiles)}`);
+                    userStore.forEach((item, index) => {
 
-                    userStore.forEach(item => {
+                        if (index === 0) {
+                            item.turnActive = true;
+                            activePlayer = item.name;
+                        }
 
-                        sendCommand(item.ws, { command: 'StartGame', data: { tilesOnHand: tiles.splice(0, 6), board: initalBoard } });
+                        const tilesOnHand = startTilesForAllPlayers.splice(0, 6);
+                        tilesOnHand.forEach((tile, i) => {
+                            tile.id = i;
+                        });
+                        item.tilesOnHand = tilesOnHand;
+
+                        sendCommand(item.ws, {
+                            command: 'StartGame', data: {
+                                turnActive: item.turnActive,
+                                tilesOnHand: tilesOnHand,
+                                activePlayer: activePlayer,
+                                board: initalBoard
+                            }
+                        });
                     });
                     console.log(`start game`);
 
@@ -64,6 +83,10 @@ wss.on('connection', function connection(ws: WebSocket) {
                 case 'CheckMove':
 
                     console.log(`check move`);
+
+                    if (!getSession(id).turnActive) {
+                        return;
+                    }
 
                     const tileToMove: TileData = dataParsed.data;
                     const tileOnBoard = stock.getTileForCoordinates(tileToMove);
@@ -90,11 +113,19 @@ wss.on('connection', function connection(ws: WebSocket) {
                     }
 
                     tilesOnTurn.push(tileOnBoard);
+
                     const gameData = stock.executeMove(tileOnBoard, tileToMove);
 
                     userStore.forEach(item => {
 
-                        sendCommand(item.ws, { command: 'RefreshBoard', data: gameData });
+                        let tilesOnHand = item.tilesOnHand;
+                        if (id === item.id) {
+
+                            tilesOnHand = tilesOnHand.filter(tile => tile.id !== tileToMove.id);
+                        }
+
+                        item.tilesOnHand = tilesOnHand;
+                        sendCommand(item.ws, { command: 'RefreshBoard', data: { tilesOnHand: tilesOnHand, board: gameData } });
                     });
 
                     break;
@@ -127,6 +158,12 @@ function removeSession(id: string) {
         userStore.splice(index, 1);
         console.log('removed id: %s', id);
     }
+}
+
+function getSession(id?: string) {
+    console.log('get session: ', id);
+    const session = userStore.filter(item => item.id === id)[0];
+    return session;
 }
 
 const setDataToAllClients = (command: Command) => {
