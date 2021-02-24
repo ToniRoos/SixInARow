@@ -21,7 +21,8 @@ export const stock = (function () {
         gameData = {
             tiles: retVal,
             sizeX: initalSize,
-            sizeY: initalSize
+            sizeY: initalSize,
+            activePlayer: ""
         };
 
         return gameData;
@@ -91,6 +92,12 @@ export const stock = (function () {
             gameData = { ...gameData, sizeY: sizeY, sizeX: sizeX };
             return gameData;
             //TODO refresh board
+        },
+        getGameData: () => {
+            return gameData;
+        },
+        setActivePlayer: (activePlayer: string) => {
+            gameData.activePlayer = activePlayer;
         }
     };
 })();

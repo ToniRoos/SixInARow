@@ -10,7 +10,7 @@ export interface UserSessionData extends SessionId {
     name: string;
     ws: WebSocket;
     tilesOnHand: TileSymbols[];
-    turnActive: boolean;
+    // turnActive: boolean;
 }
 
 wss.on('connection', function connection(ws: WebSocket) {
@@ -22,6 +22,12 @@ wss.on('connection', function connection(ws: WebSocket) {
         ws.on('message', (message: string) => {
 
             const dataParsed: Command = JSON.parse(message);
+
+            if (id && id !== dataParsed.id) {
+                console.log("Returned with invalid ID. " + id + " !== " + dataParsed.id)
+                return;
+            }
+
             switch (dataParsed.command) {
                 case 'SetName':
                     id = createUUID();
@@ -29,8 +35,7 @@ wss.on('connection', function connection(ws: WebSocket) {
                         id: id,
                         name: dataParsed.data,
                         ws: ws,
-                        tilesOnHand: [],
-                        turnActive: false
+                        tilesOnHand: []
                     })
                     sendCommand(ws, { command: 'SetId', id: id });
                     console.log(`added id for user: ${dataParsed.data}, id: ${id}`);
@@ -46,26 +51,22 @@ wss.on('connection', function connection(ws: WebSocket) {
 
                     const initalBoard = stock.createGame();
                     const startTilesForAllPlayers = stock.getNextTiles(6 * userStore.length);
-                    let activePlayer = "";
 
                     userStore.forEach((item, index) => {
 
                         if (index === 0) {
-                            item.turnActive = true;
-                            activePlayer = item.name;
+                            // item.turnActive = true;
+                            stock.setActivePlayer(item.name);
                         }
 
                         const tilesOnHand = startTilesForAllPlayers.splice(0, 6);
-                        tilesOnHand.forEach((tile, i) => {
-                            tile.id = i;
-                        });
+                        setIdsToTilesOnHand(tilesOnHand);
                         item.tilesOnHand = tilesOnHand;
 
                         sendCommand(item.ws, {
                             command: 'StartGame', data: {
-                                turnActive: item.turnActive,
+                                turnActive: item.name === stock.getGameData().activePlayer,
                                 tilesOnHand: tilesOnHand,
-                                activePlayer: activePlayer,
                                 board: initalBoard
                             }
                         });
@@ -84,7 +85,7 @@ wss.on('connection', function connection(ws: WebSocket) {
 
                     console.log(`check move`);
 
-                    if (!getSession(id).turnActive) {
+                    if (getSession(id).name !== stock.getGameData().activePlayer) {
                         return;
                     }
 
@@ -114,7 +115,7 @@ wss.on('connection', function connection(ws: WebSocket) {
 
                     tilesOnTurn.push(tileOnBoard);
 
-                    const gameData = stock.executeMove(tileOnBoard, tileToMove);
+                    let gameData = stock.executeMove(tileOnBoard, tileToMove);
 
                     userStore.forEach(item => {
 
@@ -125,8 +126,39 @@ wss.on('connection', function connection(ws: WebSocket) {
                         }
 
                         item.tilesOnHand = tilesOnHand;
-                        sendCommand(item.ws, { command: 'RefreshBoard', data: { tilesOnHand: tilesOnHand, board: gameData } });
+                        sendCommand(item.ws, {
+                            command: 'RefreshBoard', data: {
+                                turnActive: item.name === stock.getGameData().activePlayer,
+                                tilesOnHand: tilesOnHand,
+                                board: gameData
+                            }
+                        });
                     });
+
+                    break;
+                case 'NextTurn':
+
+                    const tiles = stock.getNextTiles(tilesOnTurn.length);
+                    tilesOnTurn = [];
+                    const session = getSession(id);
+
+                    session.tilesOnHand = [...session.tilesOnHand, ...tiles];
+                    setIdsToTilesOnHand(session.tilesOnHand);
+
+                    const activePlayer = setNextPlayerActive(session.id);
+                    stock.setActivePlayer(activePlayer);
+
+                    userStore.forEach((item, index) => {
+                        sendCommand(item.ws, {
+                            command: 'RefreshBoard', data: {
+                                turnActive: item.name === activePlayer,
+                                tilesOnHand: item.tilesOnHand,
+                                board: stock.getGameData()
+                            }
+                        });
+                    });
+
+                    console.log(`next turn`);
 
                     break;
                 default:
@@ -151,6 +183,12 @@ const sendCommand = (ws: WebSocket, command: Command) => {
     ws.send(parsedPayload);
 }
 
+function setIdsToTilesOnHand(tilesOnHand: TileSymbols[]) {
+    tilesOnHand.forEach((tile, i) => {
+        tile.id = i;
+    });
+}
+
 function removeSession(id: string) {
     console.log('close session: ', id);
     const index = userStore.findIndex(item => item.id === id);
@@ -164,6 +202,27 @@ function getSession(id?: string) {
     console.log('get session: ', id);
     const session = userStore.filter(item => item.id === id)[0];
     return session;
+}
+
+function setNextPlayerActive(id?: string) {
+
+    console.log('set next player active: ', id);
+    let activePlayer = '';
+
+    // userStore.forEach(sessionItem => {
+    //     sessionItem.turnActive = false;
+    // });
+
+    const sessionIndex = userStore.findIndex(item => item.id === id);
+    if (sessionIndex < userStore.length - 1) {
+        // userStore[sessionIndex + 1].turnActive = true;
+        activePlayer = userStore[sessionIndex + 1].name;
+    } else {
+        // userStore[0].turnActive = true;
+        activePlayer = userStore[0].name;
+    }
+
+    return activePlayer;
 }
 
 const setDataToAllClients = (command: Command) => {

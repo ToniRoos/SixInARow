@@ -9,6 +9,7 @@ export interface TileProps extends TileData {
 
 const Tile = (props: TileProps) => {
 
+    const [hover, setHover] = React.useState(false);
     const tileSize = props.tileSize ? props.tileSize : 100;
 
     function allowDrop(ev: any) {
@@ -18,6 +19,7 @@ const Tile = (props: TileProps) => {
         }
 
         ev.preventDefault();
+        setHover(true);
     }
 
     function drop(ev: any) {
@@ -26,16 +28,19 @@ const Tile = (props: TileProps) => {
         if (props.onDropped) {
             props.onDropped({ x: props.x, y: props.y, color: data.color, symbol: data.symbol, id: data.id });
         }
+        setHover(false);
     }
 
     function drag(ev: any) {
         ev.dataTransfer.setData("text", JSON.stringify(props));
     }
 
-    const bgColor = props.color ? "bg-dark text-white" : "bg-transparent";
+    const bgEmptyField = hover ? "bg-half-transparent" : "bg-transparent";
+    const bgColor = props.color ? "bg-dark text-white" : bgEmptyField;
 
     return <div draggable={props.allowDrag}
         onDragOver={event => allowDrop(event)}
+        onDragLeave={() => setHover(false)}
         onDragStart={(event) => drag(event)}
         onDrop={(event => drop(event))}
         style={{

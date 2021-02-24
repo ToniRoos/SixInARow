@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Board, { BoardProps } from './Board';
+import Board from './Board';
 import { ws } from './logic/ws';
 import Login from './Login';
 import { color1, Command } from './types';
@@ -8,7 +8,6 @@ import Waiting from './Waiting';
 const Main = () => {
 
     const [page, setPage] = React.useState(<Login />);
-    const [id, setId] = React.useState('');
 
     React.useEffect(() => {
 
@@ -18,7 +17,9 @@ const Main = () => {
 
             if (dataParsed.command === 'SetId') {
                 setPage(() => <Waiting />);
-                setId(() => dataParsed.data);
+                const id = dataParsed.id ? dataParsed.id : "";
+                ws.setId(id);
+                // setId(() => dataParsed.data);
             } else if (dataParsed.command === 'StartGame') {
 
                 setPage(() => <Board {...dataParsed.data} />);

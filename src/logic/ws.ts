@@ -2,6 +2,7 @@ import { Command, Commands } from "../types";
 
 export const ws = (function () {
 
+    let playersId = "";
     let socket: WebSocket;
     (() => {
 
@@ -21,6 +22,7 @@ export const ws = (function () {
 
         sendCommand: (command: Command) => {
 
+            command.id = playersId;
             const parsedPayload = JSON.stringify(command);
             socket.send(parsedPayload);
         },
@@ -41,6 +43,10 @@ export const ws = (function () {
 
             socket.addEventListener('message', listener);
             return listener;
+        },
+
+        setId(id: string) {
+            playersId = id;
         }
     };
 })();

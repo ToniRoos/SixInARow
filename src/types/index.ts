@@ -5,7 +5,8 @@ export type Commands = 'SetId' |
     'StartGame' |
     'GetTiles' |
     'CheckMove' |
-    'RefreshBoard';
+    'RefreshBoard' |
+    'NextTurn';
 
 export interface Command extends SessionId {
     command: Commands,
@@ -50,6 +51,7 @@ export interface BoardData {
     tiles: TileData[];
     sizeX: number;
     sizeY: number;
+    activePlayer: string;
 }
 
 export const color1 = "warning";
