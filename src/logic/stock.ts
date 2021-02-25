@@ -1,8 +1,11 @@
+import { UserSessionData } from "../backend";
 import { BoardData, TileData, TileSymbols } from "../types";
-import { checkBoardSize } from "./boardLogic";
+import { checkBoardSize, findMatchingTilesByCheckingNeighbours } from "./boardLogic";
 
-export const stock = (function () {
-    var stock: TileSymbols[] = [];
+export const game = (function () {
+
+    const stock: TileSymbols[] = [];
+    const userStore: UserSessionData[] = [];
     let gameData: BoardData;
 
     const intialStateForBoard = () => {
@@ -78,8 +81,9 @@ export const stock = (function () {
 
             return gameData.tiles;
         },
-        executeMove: (tileOnBoard: TileData, tileToMove: TileData) => {
+        executeMove: (tileToMove: TileData) => {
 
+            const tileOnBoard = game.getTileForCoordinates(tileToMove);
             tileOnBoard.color = tileToMove.color;
             tileOnBoard.symbol = tileToMove.symbol;
 
@@ -93,11 +97,66 @@ export const stock = (function () {
             return gameData;
             //TODO refresh board
         },
+        checkMove: (id: string, tileToMove: TileData) => {
+
+            const tileOnBoard = game.getTileForCoordinates(tileToMove);
+
+            const tileMatches = findMatchingTilesByCheckingNeighbours(tileOnBoard, tileToMove.color, tileToMove.symbol, game.getTilesOfGame());
+            if (!tileMatches) {
+                return false;
+            }
+
+            let sessionData = game.getSession(id);
+            let tilesOnTurn = sessionData.tilesOnTurn;
+            const tilesOnTurnSize = tilesOnTurn.length;
+            if (tilesOnTurnSize === 1
+                && tileOnBoard.x !== tilesOnTurn[0].x
+                && tileOnBoard.y !== tilesOnTurn[0].y) {
+                return false;
+            }
+
+            const numberInRow = tilesOnTurn.filter(item => item.x === tileOnBoard.x).length;
+            const numberInCol = tilesOnTurn.filter(item => item.y === tileOnBoard.y).length;
+            if (tilesOnTurnSize > 1
+                && numberInRow !== tilesOnTurnSize
+                && numberInCol !== tilesOnTurnSize) {
+
+                return false;
+            }
+
+            tilesOnTurn.push(tileOnBoard);
+            return true;
+        },
         getGameData: () => {
             return gameData;
         },
         setActivePlayer: (activePlayer: string) => {
             gameData.activePlayer = activePlayer;
+        },
+        getUserSessions: () => {
+            return userStore;
+        },
+        getSession: (id?: string) => {
+            console.log('get session: ', id);
+            const session = userStore.filter(item => item.id === id)[0];
+            return session;
+        },
+        addUserSession: (sessionData: UserSessionData) => {
+            userStore.push(sessionData);
+        },
+        getUserNames: () => {
+            return userStore.map(items => items.name);
+        },
+        countUsers: () => {
+            return userStore.length;
+        },
+        removeSession: (id: string) => {
+            console.log('close session: ', id);
+            const index = userStore.findIndex(item => item.id === id);
+            if (index >= 0) {
+                userStore.splice(index, 1);
+                console.log('removed id: %s', id);
+            }
         }
     };
 })();

@@ -71,25 +71,34 @@ export const findMatchingTilesByCheckingNeighbours = (tileToSearch: TileData, co
         ...findNeighboursForDirection('y', tileToSearch, tiles, 1),
         ...findNeighboursForDirection('y', tileToSearch, tiles, -1)
     ];
+    console.log(JSON.stringify(tilesCol))
     if (tilesCol.length > 5) {
-        return;
+        return false;
     }
 
     var matchesForColorForCol = listPossiblesMatches(tilesCol, 'color');
     var matchesForSymbolForCol = listPossiblesMatches(tilesCol, 'symbol');
     var matchesForCol = [...matchesForColorForCol, ...matchesForSymbolForCol];
 
+    if (tilesCol.length > 0 && matchesForCol.length === 0) {
+        return false;
+    }
+
     const tilesRow: TileData[] = [
         ...findNeighboursForDirection('x', tileToSearch, tiles, 1),
         ...findNeighboursForDirection('x', tileToSearch, tiles, -1)
     ];
     if (tilesRow.length > 5) {
-        return;
+        return false;
     }
 
     var matchesForColorForRow = listPossiblesMatches(tilesRow, 'color');
     var matchesForSymbolForRow = listPossiblesMatches(tilesRow, 'symbol');
     var matchesForRow = [...matchesForColorForRow, ...matchesForSymbolForRow];
+
+    if (tilesRow.length > 0 && matchesForRow.length === 0) {
+        return false;
+    }
 
     if (matchesForCol.length === 0 && matchesForRow.length === 0 && tiles.length > 9) {
         return false;

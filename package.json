@@ -59,8 +59,15 @@
     "ws": "^7.4.3"
   },
   "jest": {
-    "setupFilesAfterEnv": [
-      "<rootDir>test/setupTests.js"
+    "transform": {
+      "^.+\\.ts?$": "ts-jest",
+      "^.+\\.jsx?$": "babel-jest"
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx"
     ]
   }
 }

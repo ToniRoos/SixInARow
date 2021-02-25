@@ -1,22 +1,22 @@
 import * as WebSocket from "ws";
-import { findMatchingTilesByCheckingNeighbours } from "../logic/boardLogic";
-import { stock } from "../logic/stock";
+import { game } from "../logic/stock";
 import { Command, SessionId, TileData, TileSymbols } from "../types";
 import { createUUID } from "./helper";
 
 const wss = new WebSocket.Server({ port: 8080 });
-const userStore: UserSessionData[] = [];
+
 export interface UserSessionData extends SessionId {
     name: string;
     ws: WebSocket;
     tilesOnHand: TileSymbols[];
+    tilesOnTurn: TileData[];
     // turnActive: boolean;
 }
 
 wss.on('connection', function connection(ws: WebSocket) {
 
     let id: string;
-    let tilesOnTurn: TileData[] = [];
+    // let tilesOnTurn: TileData[] = [];
 
     try {
         ws.on('message', (message: string) => {
@@ -31,32 +31,34 @@ wss.on('connection', function connection(ws: WebSocket) {
             switch (dataParsed.command) {
                 case 'SetName':
                     id = createUUID();
-                    userStore.push({
+                    game.addUserSession({
                         id: id,
                         name: dataParsed.data,
                         ws: ws,
-                        tilesOnHand: []
-                    })
+                        tilesOnHand: [],
+                        tilesOnTurn: []
+                    });
                     sendCommand(ws, { command: 'SetId', id: id });
                     console.log(`added id for user: ${dataParsed.data}, id: ${id}`);
                     break;
                 case 'GetPlayers':
 
-                    const data = userStore.map(items => items.name);
+                    const data = game.getUserNames();
                     setDataToAllClients({ command: 'PlayersList', data: data });
                     console.log(`playerslist: ${JSON.stringify(data)}`);
 
                     break;
                 case 'StartGame':
 
-                    const initalBoard = stock.createGame();
-                    const startTilesForAllPlayers = stock.getNextTiles(6 * userStore.length);
+                    const initalBoard = game.createGame();
+                    const countUsers = game.countUsers();
+                    const startTilesForAllPlayers = game.getNextTiles(6 * countUsers);
 
-                    userStore.forEach((item, index) => {
+                    game.getUserSessions().forEach((item, index) => {
 
                         if (index === 0) {
                             // item.turnActive = true;
-                            stock.setActivePlayer(item.name);
+                            game.setActivePlayer(item.name);
                         }
 
                         const tilesOnHand = startTilesForAllPlayers.splice(0, 6);
@@ -65,7 +67,7 @@ wss.on('connection', function connection(ws: WebSocket) {
 
                         sendCommand(item.ws, {
                             command: 'StartGame', data: {
-                                turnActive: item.name === stock.getGameData().activePlayer,
+                                turnActive: item.name === game.getGameData().activePlayer,
                                 tilesOnHand: tilesOnHand,
                                 board: initalBoard
                             }
@@ -76,7 +78,7 @@ wss.on('connection', function connection(ws: WebSocket) {
                     break;
                 case 'GetTiles':
 
-                    // const tiles = stock.getNextTiles(6);
+                    // const tiles = game.getNextTiles(6);
                     // sendCommand(ws, { command: 'GetTiles', id: id, data: tiles });
                     console.log(`get tiles`);
 
@@ -85,39 +87,20 @@ wss.on('connection', function connection(ws: WebSocket) {
 
                     console.log(`check move`);
 
-                    if (getSession(id).name !== stock.getGameData().activePlayer) {
+                    if (game.getSession(id).name !== game.getGameData().activePlayer) {
                         return;
                     }
 
                     const tileToMove: TileData = dataParsed.data;
-                    const tileOnBoard = stock.getTileForCoordinates(tileToMove);
-
-                    const tileMatches = findMatchingTilesByCheckingNeighbours(tileOnBoard, tileToMove.color, tileToMove.symbol, stock.getTilesOfGame());
-                    if (!tileMatches) {
+                    const canExecuteMove = game.checkMove(id, tileToMove);
+                    if (!canExecuteMove) {
                         return;
                     }
 
-                    const tilesOnTurnSize = tilesOnTurn.length;
-                    if (tilesOnTurnSize === 1
-                        && tileOnBoard.x !== tilesOnTurn[0].x
-                        && tileOnBoard.y !== tilesOnTurn[0].y) {
-                        return;
-                    }
+                    ///////////
+                    let gameData = game.executeMove(tileToMove);
 
-                    const numberInRow = tilesOnTurn.filter(item => item.x === tileOnBoard.x).length;
-                    const numberInCol = tilesOnTurn.filter(item => item.y === tileOnBoard.y).length;
-                    if (tilesOnTurnSize > 1
-                        && numberInRow !== tilesOnTurnSize
-                        && numberInCol !== tilesOnTurnSize) {
-
-                        return;
-                    }
-
-                    tilesOnTurn.push(tileOnBoard);
-
-                    let gameData = stock.executeMove(tileOnBoard, tileToMove);
-
-                    userStore.forEach(item => {
+                    game.getUserSessions().forEach(item => {
 
                         let tilesOnHand = item.tilesOnHand;
                         if (id === item.id) {
@@ -128,7 +111,7 @@ wss.on('connection', function connection(ws: WebSocket) {
                         item.tilesOnHand = tilesOnHand;
                         sendCommand(item.ws, {
                             command: 'RefreshBoard', data: {
-                                turnActive: item.name === stock.getGameData().activePlayer,
+                                turnActive: item.name === game.getGameData().activePlayer,
                                 tilesOnHand: tilesOnHand,
                                 board: gameData
                             }
@@ -138,22 +121,25 @@ wss.on('connection', function connection(ws: WebSocket) {
                     break;
                 case 'NextTurn':
 
-                    const tiles = stock.getNextTiles(tilesOnTurn.length);
+                    const sessionData = game.getSession(id);
+                    let tilesOnTurn = sessionData.tilesOnTurn;
+
+                    const tiles = game.getNextTiles(tilesOnTurn.length);
                     tilesOnTurn = [];
-                    const session = getSession(id);
+                    const session = game.getSession(id);
 
                     session.tilesOnHand = [...session.tilesOnHand, ...tiles];
                     setIdsToTilesOnHand(session.tilesOnHand);
 
                     const activePlayer = setNextPlayerActive(session.id);
-                    stock.setActivePlayer(activePlayer);
+                    game.setActivePlayer(activePlayer);
 
-                    userStore.forEach((item, index) => {
+                    game.getUserSessions().forEach((item, index) => {
                         sendCommand(item.ws, {
                             command: 'RefreshBoard', data: {
                                 turnActive: item.name === activePlayer,
                                 tilesOnHand: item.tilesOnHand,
-                                board: stock.getGameData()
+                                board: game.getGameData()
                             }
                         });
                     });
@@ -191,17 +177,11 @@ function setIdsToTilesOnHand(tilesOnHand: TileSymbols[]) {
 
 function removeSession(id: string) {
     console.log('close session: ', id);
-    const index = userStore.findIndex(item => item.id === id);
+    const index = game.getUserSessions().findIndex(item => item.id === id);
     if (index >= 0) {
-        userStore.splice(index, 1);
+        game.getUserSessions().splice(index, 1);
         console.log('removed id: %s', id);
     }
-}
-
-function getSession(id?: string) {
-    console.log('get session: ', id);
-    const session = userStore.filter(item => item.id === id)[0];
-    return session;
 }
 
 function setNextPlayerActive(id?: string) {
@@ -213,20 +193,20 @@ function setNextPlayerActive(id?: string) {
     //     sessionItem.turnActive = false;
     // });
 
-    const sessionIndex = userStore.findIndex(item => item.id === id);
-    if (sessionIndex < userStore.length - 1) {
+    const sessionIndex = game.getUserSessions().findIndex(item => item.id === id);
+    if (sessionIndex < game.getUserSessions().length - 1) {
         // userStore[sessionIndex + 1].turnActive = true;
-        activePlayer = userStore[sessionIndex + 1].name;
+        activePlayer = game.getUserSessions()[sessionIndex + 1].name;
     } else {
         // userStore[0].turnActive = true;
-        activePlayer = userStore[0].name;
+        activePlayer = game.getUserSessions()[0].name;
     }
 
     return activePlayer;
 }
 
 const setDataToAllClients = (command: Command) => {
-    userStore.forEach(item => {
+    game.getUserSessions().forEach(item => {
         if (item.ws.readyState === item.ws.OPEN) {
             sendCommand(item.ws, command);
         } else {
