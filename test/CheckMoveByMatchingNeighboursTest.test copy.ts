@@ -5,7 +5,7 @@ import { data2 } from "./data/boardTestData2";
 import { data3 } from "./data/boardTestData3";
 import { data4 } from "./data/boardTestData4";
 
-describe('Game logic', () => {
+describe('Game logic check move by matching neighbours', () => {
 
   beforeAll(() => {
 

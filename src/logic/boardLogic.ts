@@ -1,23 +1,7 @@
-// import { BoardState } from "../Board";
 import { BoardData, TileData, TileSymbols } from "../types";
 
 type tileDescriptor = 'color' | 'symbol';
 type coordinatesTypes = 'x' | 'y';
-
-// export function executeDrop(tileToChange: TileData, data: TileData, boardData: BoardState, setBoard: React.Dispatch<React.SetStateAction<BoardState>>) {
-//     tileToChange.color = data.color;
-//     tileToChange.symbol = data.symbol;
-
-//     let sizeY = boardData.board.sizeY;
-//     let sizeX = boardData.board.sizeX;
-
-//     sizeY = checkBoardSize('y', tileToChange, boardData.board, sizeX, sizeY);
-//     sizeX = checkBoardSize('x', tileToChange, boardData.board, sizeX, sizeY);
-
-//     setBoard(() => {
-//         return { ...boardData, board: { ...boardData.board, sizeY: sizeY, sizeX: sizeX } };
-//     });
-// }
 
 export function checkBoardSize(directionToCheck: 'x' | 'y', tileToChange: TileData, board: BoardData, sizeX: number, sizeY: number) {
 
@@ -63,6 +47,43 @@ export function checkBoardSize(directionToCheck: 'x' | 'y', tileToChange: TileDa
         sizeForDirection = sizeForDirection + 1;
     }
     return sizeForDirection;
+}
+
+export const checkMoveForAlreadyPlayedTilesOfTurn = (tilesOnTurn: TileData[], tileOnBoard: TileData) => {
+
+    const tilesOnTurnSize = tilesOnTurn.length;
+    let retVal = false;
+
+    if (tilesOnTurnSize === 0) {
+        retVal = true;
+    }
+
+    if (tilesOnTurnSize === 1) {
+
+        retVal = tileOnBoard.x === tilesOnTurn[0].x && Math.abs(tileOnBoard.y - tilesOnTurn[0].y) === 1
+            || tileOnBoard.y === tilesOnTurn[0].y && Math.abs(tileOnBoard.x - tilesOnTurn[0].x) === 1;
+    }
+
+    if (tilesOnTurnSize > 1 && tilesOnTurnSize < 6) {
+
+        const numberInRow = tilesOnTurn.filter(item => item.x === tileOnBoard.x).length;
+        const numberInCol = tilesOnTurn.filter(item => item.y === tileOnBoard.y).length;
+
+        if (numberInRow === tilesOnTurnSize) {
+            const hasAnyDirectNeighbour = tilesOnTurn.filter(item => Math.abs(item.y - tileOnBoard.y) === 1).length > 0;
+            retVal = hasAnyDirectNeighbour;
+        }
+        if (numberInCol === tilesOnTurnSize) {
+            const hasAnyDirectNeighbour = tilesOnTurn.filter(item => Math.abs(item.x - tileOnBoard.x) === 1).length > 0;
+            retVal = hasAnyDirectNeighbour;
+        }
+    }
+
+    if (retVal) {
+        tilesOnTurn.push(tileOnBoard);
+    }
+
+    return retVal;
 }
 
 export const findMatchingTilesByCheckingNeighbours = (tileToSearch: TileData, color: number | undefined, symbol: number | undefined, tiles: TileData[]) => {

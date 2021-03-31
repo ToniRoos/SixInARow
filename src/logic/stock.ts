@@ -1,6 +1,6 @@
 import { UserSessionData } from "../backend";
 import { BoardData, TileData, TileSymbols } from "../types";
-import { checkBoardSize, findMatchingTilesByCheckingNeighbours } from "./boardLogic";
+import { checkBoardSize, checkMoveForAlreadyPlayedTilesOfTurn, findMatchingTilesByCheckingNeighbours } from "./boardLogic";
 
 export const game = (function () {
 
@@ -108,24 +108,8 @@ export const game = (function () {
 
             let sessionData = game.getSession(id);
             let tilesOnTurn = sessionData.tilesOnTurn;
-            const tilesOnTurnSize = tilesOnTurn.length;
-            if (tilesOnTurnSize === 1
-                && tileOnBoard.x !== tilesOnTurn[0].x
-                && tileOnBoard.y !== tilesOnTurn[0].y) {
-                return false;
-            }
 
-            const numberInRow = tilesOnTurn.filter(item => item.x === tileOnBoard.x).length;
-            const numberInCol = tilesOnTurn.filter(item => item.y === tileOnBoard.y).length;
-            if (tilesOnTurnSize > 1
-                && numberInRow !== tilesOnTurnSize
-                && numberInCol !== tilesOnTurnSize) {
-
-                return false;
-            }
-
-            tilesOnTurn.push(tileOnBoard);
-            return true;
+            return checkMoveForAlreadyPlayedTilesOfTurn(tilesOnTurn, tileOnBoard);
         },
         getGameData: () => {
             return gameData;
