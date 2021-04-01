@@ -2,22 +2,6 @@ import * as React from 'react';
 import { ws } from './logic/ws';
 import Tile, { TileProps } from './Tile';
 import { BoardData, TileSymbols } from './types';
-
-// const intialStateForBoard = () => {
-
-//     return {
-//         board: {
-//             tiles: [],
-//             sizeX: 0,
-//             sizeY: 0,
-//             activePlayer: ""
-//         },
-//         tileSize: 100,
-//         tilesOnHand: [],
-//         tilesOnTurn: []
-//     };
-// };
-
 export interface BoardState {
     turnActive: boolean;
     board: BoardData;
@@ -25,13 +9,6 @@ export interface BoardState {
     tilesOnHand: TileSymbols[];
     tilesOnTurn: TileProps[];
 }
-
-// export interface BoardProps {
-//     tilesOnHand: TileSymbols[];
-//     activePlayer: string;
-//     turnActive: boolean;
-//     board: BoardData;
-// }
 
 const Board = (props: BoardState) => {
 

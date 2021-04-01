@@ -86,13 +86,13 @@ export const checkMoveForAlreadyPlayedTilesOfTurn = (tilesOnTurn: TileData[], ti
     return retVal;
 }
 
-export const findMatchingTilesByCheckingNeighbours = (tileToSearch: TileData, color: number | undefined, symbol: number | undefined, tiles: TileData[]) => {
+export const findMatchingTilesByCheckingNeighbours = (tileToSearch: TileData, color: number | undefined, symbol: number | undefined, tilesAtBoard: TileData[]) => {
 
     const tilesCol: TileData[] = [
-        ...findNeighboursForDirection('y', tileToSearch, tiles, 1),
-        ...findNeighboursForDirection('y', tileToSearch, tiles, -1)
+        ...findNeighboursForDirection('y', tileToSearch, tilesAtBoard, 1),
+        ...findNeighboursForDirection('y', tileToSearch, tilesAtBoard, -1)
     ];
-    console.log(JSON.stringify(tilesCol))
+
     if (tilesCol.length > 5) {
         return false;
     }
@@ -106,8 +106,8 @@ export const findMatchingTilesByCheckingNeighbours = (tileToSearch: TileData, co
     }
 
     const tilesRow: TileData[] = [
-        ...findNeighboursForDirection('x', tileToSearch, tiles, 1),
-        ...findNeighboursForDirection('x', tileToSearch, tiles, -1)
+        ...findNeighboursForDirection('x', tileToSearch, tilesAtBoard, 1),
+        ...findNeighboursForDirection('x', tileToSearch, tilesAtBoard, -1)
     ];
     if (tilesRow.length > 5) {
         return false;
@@ -121,7 +121,7 @@ export const findMatchingTilesByCheckingNeighbours = (tileToSearch: TileData, co
         return false;
     }
 
-    if (matchesForCol.length === 0 && matchesForRow.length === 0 && tiles.length > 9) {
+    if (matchesForCol.length === 0 && matchesForRow.length === 0 && tilesAtBoard.length > 9) {
         return false;
     }
 

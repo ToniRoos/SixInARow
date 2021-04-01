@@ -125,7 +125,8 @@ wss.on('connection', function connection(ws: WebSocket) {
                     let tilesOnTurn = sessionData.tilesOnTurn;
 
                     const tiles = game.getNextTiles(tilesOnTurn.length);
-                    tilesOnTurn = [];
+                    sessionData.tilesOnTurn = [];
+
                     const session = game.getSession(id);
 
                     session.tilesOnHand = [...session.tilesOnHand, ...tiles];

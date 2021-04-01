@@ -95,7 +95,6 @@ export const game = (function () {
 
             gameData = { ...gameData, sizeY: sizeY, sizeX: sizeX };
             return gameData;
-            //TODO refresh board
         },
         checkMove: (id: string, tileToMove: TileData) => {
 
@@ -108,6 +107,8 @@ export const game = (function () {
 
             let sessionData = game.getSession(id);
             let tilesOnTurn = sessionData.tilesOnTurn;
+
+            console.log("Tiles on turn: " + JSON.stringify(tilesOnTurn))
 
             return checkMoveForAlreadyPlayedTilesOfTurn(tilesOnTurn, tileOnBoard);
         },
