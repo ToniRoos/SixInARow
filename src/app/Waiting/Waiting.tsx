@@ -1,10 +1,12 @@
 import { stringify } from 'querystring';
 import React from 'react';
-import { ws } from './logic/ws';
-import { color1, color2, Command } from './types';
+import { useParams } from 'react-router';
+import { ws } from '../../logic/ws';
+import { color1, color2, Command } from '../../types';
 
 const Waiting = () => {
 
+    const { sessionId } = useParams();
     const [players, setPlayers] = React.useState<string[]>([]);
 
     React.useEffect(() => {
@@ -14,7 +16,7 @@ const Waiting = () => {
             setPlayers(data.data);
             console.log("Waiting: on message called");
         });
-        ws.sendCommand({ command: 'GetPlayers' });
+        // ws.sendCommand({ command: 'GetPlayers' });
 
         return () => {
             ws.getSocket().removeEventListener('message', listener);

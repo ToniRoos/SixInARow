@@ -14,7 +14,7 @@ export interface Command extends SessionId {
 }
 
 export interface SessionId {
-    id?: string
+    id: string
 }
 
 export enum ColorEnum {

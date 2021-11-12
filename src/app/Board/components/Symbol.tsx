@@ -1,5 +1,5 @@
 import React from "react";
-import { SymbolEnum, ColorEnum } from "./types";
+import { SymbolEnum, ColorEnum } from "../../../types";
 
 export const drawSymbol = (symbol?: SymbolEnum, color?: ColorEnum) => {
 

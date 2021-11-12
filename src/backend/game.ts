@@ -1,11 +1,16 @@
-import { UserSessionData } from "../backend";
+
 import { BoardData, TileData, TileSymbols } from "../types";
-import { checkBoardSize, checkMoveForAlreadyPlayedTilesOfTurn, findMatchingTilesByCheckingNeighbours } from "./boardLogic";
+import { checkBoardSize, checkMoveForAlreadyPlayedTilesOfTurn, findMatchingTilesByCheckingNeighbours } from "../logic/boardLogic";
+import { createInitalStock } from "./tileStock/createInitialTileStock";
+import { StockType } from "./tileStock/tileStock";
+import { createUserStore } from "./userStore/createUserStore";
+import { UserStore } from "./userStore/userStore";
+import { UserSessionData } from "./userStore/UserSessionData";
 
 export const game = (function () {
 
-    const stock: TileSymbols[] = [];
-    const userStore: UserSessionData[] = [];
+    let stock: StockType;
+    const userStore: UserStore = createUserStore();
     let gameData: BoardData;
 
     const intialStateForBoard = () => {
@@ -31,46 +36,14 @@ export const game = (function () {
         return gameData;
     };
 
-    const createInitalStock = () => {
-
-        const amountOfColors = 6;
-        const amountOfShapes = 6;
-        const amountOfSetsPerColor = 3;
-
-        for (let m = 0; m < amountOfSetsPerColor; m++) {
-            for (let color = 1; color < amountOfColors + 1; color++) {
-                for (let shape = 1; shape < amountOfShapes + 1; shape++) {
-                    stock.push({ color: color, symbol: shape })
-                }
-            }
-        }
-    }
-
-    // (() => {
-    //     stock = createInitalStock();
-    // })();
-
     return { // public interface
         getNextTiles: function (number: number) {
 
-            const tiles = [];
-            for (let i = 0; i < number; i++) {
-
-                let max = stock.length - 1;
-                let min = 0;
-                let tileIndex = Math.floor(Math.random() * (max - min)) + min;
-                let tile = stock.splice(tileIndex, 1)[0];
-                tiles.push(tile);
-            }
-
-            // tiles.forEach((element, index) => {
-            //     element.id = index;
-            // });
-            return tiles;
+            return stock.getNextTiles(number);
         },
         createGame: function () {
 
-            createInitalStock();
+            stock = createInitalStock();
             return intialStateForBoard();
         },
         getTileForCoordinates: (tile: TileData) => {
@@ -99,8 +72,9 @@ export const game = (function () {
         checkMove: (id: string, tileToMove: TileData) => {
 
             const tileOnBoard = game.getTileForCoordinates(tileToMove);
+            const tilesAtBoard = game.getTilesOfGame();
 
-            const tileMatches = findMatchingTilesByCheckingNeighbours(tileOnBoard, tileToMove.color, tileToMove.symbol, game.getTilesOfGame());
+            const tileMatches = findMatchingTilesByCheckingNeighbours(tileOnBoard, tileToMove.color, tileToMove.symbol, tilesAtBoard);
             if (!tileMatches) {
                 return false;
             }
@@ -110,7 +84,13 @@ export const game = (function () {
 
             console.log("Tiles on turn: " + JSON.stringify(tilesOnTurn))
 
-            return checkMoveForAlreadyPlayedTilesOfTurn(tilesOnTurn, tileOnBoard);
+            const allowMove = checkMoveForAlreadyPlayedTilesOfTurn(tilesOnTurn, tileOnBoard);
+
+            if (allowMove && tilesOnTurn.length === 0) {
+                // const allowMoveForRow = tilesAtBoard.filter(tile => tile.x = tileToMove.x && Math.abs(tile.y - tileToMove.y) === 1)
+            }
+
+            return allowMove;
         },
         getGameData: () => {
             return gameData;
@@ -119,29 +99,22 @@ export const game = (function () {
             gameData.activePlayer = activePlayer;
         },
         getUserSessions: () => {
-            return userStore;
+            return userStore.getUserSessions();
         },
         getSession: (id?: string) => {
-            console.log('get session: ', id);
-            const session = userStore.filter(item => item.id === id)[0];
-            return session;
+            return userStore.getSession(id);
         },
         addUserSession: (sessionData: UserSessionData) => {
-            userStore.push(sessionData);
+            return userStore.createUserSession(sessionData.name);
         },
         getUserNames: () => {
-            return userStore.map(items => items.name);
+            return userStore.getUserNames();
         },
         countUsers: () => {
-            return userStore.length;
+            return userStore.countUsers();
         },
         removeSession: (id: string) => {
-            console.log('close session: ', id);
-            const index = userStore.findIndex(item => item.id === id);
-            if (index >= 0) {
-                userStore.splice(index, 1);
-                console.log('removed id: %s', id);
-            }
+            return userStore.removeSession(id);
         }
     };
 })();
