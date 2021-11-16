@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from 'react';
 import { useQuery } from 'react-query';
-import { GameRunningState } from '../../backend/game2';
+import { GameRunningState } from '../../backend/game';
 import { color1 } from '../../types';
 import { getGameStatus, startGame } from '../api/api';
 import { Button } from '../components/Button';

@@ -1,5 +1,5 @@
 import { unknownPlayerError } from "../createError";
-import { GameState } from "../game2";
+import { GameState } from "../game";
 import { UserSessionData } from "../userStore/UserSessionData";
 
 const nextTurn = (gameState: GameState, id: string) => {

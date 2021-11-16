@@ -41,7 +41,7 @@ export interface Game {
     nextTurn: (id: string) => void;
 }
 
-const game2 = (): Game => {
+const game = (): Game => {
 
     const gameState: GameState = {
         userStore: createUserStore(),
@@ -80,4 +80,4 @@ const game2 = (): Game => {
     };
 };
 
-export { game2 };
+export { game };

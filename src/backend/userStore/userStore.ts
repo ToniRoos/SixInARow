@@ -36,11 +36,7 @@ const userStore = (): UserStore => {
             tilesOnHand: [],
             tilesOnTurn: []
         }
-
         userStore.push(userSessionData);
-
-        console.log(`UserStore => ${userStore.map(userData => `${userData.id} : ${userData.name}`)}`)
-
         return id;
     };
 

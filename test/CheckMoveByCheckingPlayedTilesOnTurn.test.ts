@@ -1,5 +1,5 @@
 import { checkMoveForAlreadyPlayedTilesOfTurn } from "../src/logic/boardLogic";
-import { ColorEnum, SymbolEnum, TileData } from "../src/types";
+import { ColorEnum, SymbolEnum, TileData, TilePosition } from "../src/types";
 
 describe('Game logic check move by checking played tiles on turn', () => {
 
@@ -15,7 +15,7 @@ describe('Game logic check move by checking played tiles on turn', () => {
 
   it('allow move for none played tile before', () => {
 
-    const tileToPlay: TileData = { x: 6, y: 2 };
+    const tileToPlay: TilePosition = { x: 6, y: 2 };
     const canDrop = checkMoveForAlreadyPlayedTilesOfTurn([], tileToPlay);
 
     expect(canDrop).toBeTruthy();
@@ -23,10 +23,8 @@ describe('Game logic check move by checking played tiles on turn', () => {
 
   it('allow move for one played tile directly in column', () => {
 
-    const tileToPlay: TileData = { x: 6, y: 2 };
-    const tilesOnTurn: TileData[] = [
-      { x: 5, y: 2 }
-    ]
+    const tileToPlay: TilePosition = { x: 6, y: 2 };
+    const tilesOnTurn: TilePosition[] = [{ x: 5, y: 2 }]
     const canDrop = checkMoveForAlreadyPlayedTilesOfTurn(tilesOnTurn, tileToPlay);
 
     expect(canDrop).toBeTruthy();
@@ -34,8 +32,8 @@ describe('Game logic check move by checking played tiles on turn', () => {
 
   it('allow move for one played tile directly in row', () => {
 
-    const tileToPlay: TileData = { x: 6, y: 2 };
-    const tilesOnTurn: TileData[] = [
+    const tileToPlay: TilePosition = { x: 6, y: 2 };
+    const tilesOnTurn: TilePosition[] = [
       { x: 6, y: 1 }
     ]
     const canDrop = checkMoveForAlreadyPlayedTilesOfTurn(tilesOnTurn, tileToPlay);
@@ -45,8 +43,8 @@ describe('Game logic check move by checking played tiles on turn', () => {
 
   it('allow move for five played tiles directly in column', () => {
 
-    const tileToPlay: TileData = { x: 6, y: 2 };
-    const tilesOnTurn: TileData[] = [
+    const tileToPlay: TilePosition = { x: 6, y: 2 };
+    const tilesOnTurn: TilePosition[] = [
       { x: 1, y: 2 },
       { x: 2, y: 2 },
       { x: 3, y: 2 },
@@ -60,8 +58,8 @@ describe('Game logic check move by checking played tiles on turn', () => {
 
   it('allow move for five played tiles directly in column splitted', () => {
 
-    const tileToPlay: TileData = { x: 6, y: 2 };
-    const tilesOnTurn: TileData[] = [
+    const tileToPlay: TilePosition = { x: 6, y: 2 };
+    const tilesOnTurn: TilePosition[] = [
       { x: 2, y: 2 },
       { x: 3, y: 2 },
       { x: 4, y: 2 },
@@ -75,8 +73,8 @@ describe('Game logic check move by checking played tiles on turn', () => {
 
   it('forbid move for four played tiles with a gap in column', () => {
 
-    const tileToPlay: TileData = { x: 6, y: 2 };
-    const tilesOnTurn: TileData[] = [
+    const tileToPlay: TilePosition = { x: 6, y: 2 };
+    const tilesOnTurn: TilePosition[] = [
       { x: 1, y: 2 },
       { x: 2, y: 2 },
       { x: 3, y: 2 },

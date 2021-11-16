@@ -1,6 +1,6 @@
 import { board } from "../board/board";
 import { unknownPlayerError } from "../createError";
-import { GameRunningState, GameState } from "../game2";
+import { GameRunningState, GameState } from "../game";
 import { createStock } from "../tileStock/createStock";
 import { stockConfig } from "../tileStock/stockConfig";
 import { UserSessionData } from "../userStore/UserSessionData";

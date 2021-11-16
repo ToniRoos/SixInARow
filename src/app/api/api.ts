@@ -1,4 +1,4 @@
-import { GameStatus } from "../../backend/game2";
+import { GameStatus } from "../../backend/game";
 import { CheckMoveResult } from "../../backend/server";
 import { SessionId, TileData } from "../../types";
 

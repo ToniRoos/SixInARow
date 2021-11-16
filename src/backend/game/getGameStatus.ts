@@ -1,4 +1,4 @@
-import { GameState, GameStatus as PlayerStatus } from "../game2";
+import { GameState, GameStatus as PlayerStatus } from "../game";
 
 const getGameStatus = (gameState: GameState, id?: string): PlayerStatus => {
     const players = gameState.userStore.getUserSessions().map(userData => userData.name);

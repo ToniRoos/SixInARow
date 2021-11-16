@@ -58,17 +58,14 @@ export function checkBoardSize(directionToCheck: 'x' | 'y', tileToChange: TileDa
     return sizeForDirection;
 }
 
-export const checkMoveForAlreadyPlayedTilesOfTurn = (tilesOnTurn: TileData[], tileOnBoard: TileData) => {
+export const checkMoveForAlreadyPlayedTilesOfTurn = (tilesOnTurnPosition: TilePosition[], tileOnBoardPosition: TilePosition) => {
 
-    const tilesOnTurnSize = tilesOnTurn.length;
+    const tilesOnTurnSize = tilesOnTurnPosition.length;
     let retVal = false;
 
     if (tilesOnTurnSize === 0) {
         retVal = true;
     }
-
-    const tileOnBoardPosition: TilePosition = tileOnBoard.position;
-    const tilesOnTurnPosition: TilePosition[] = tilesOnTurn.map(tile => ({ ...tile.position }));
 
     if (tilesOnTurnSize === 1) {
 
@@ -94,7 +91,7 @@ export const checkMoveForAlreadyPlayedTilesOfTurn = (tilesOnTurn: TileData[], ti
     return retVal;
 }
 
-export const findMatchingTilesByCheckingNeighbours = (tileToSearch: TileData, color: number | undefined, symbol: number | undefined, tilesAtBoard: TileData[]) => {
+export const findMatchingTilesByCheckingNeighbours = (tileToSearch: TilePosition, color: number | undefined, symbol: number | undefined, tilesAtBoard: TileData[]) => {
 
     const tilesCol: TileData[] = [
         ...findNeighboursForDirection('y', tileToSearch, tilesAtBoard, 1),
@@ -155,8 +152,8 @@ const listPossiblesMatches = (tileSeries: TileData[], typeToCheck: tileDescripto
             if (countForSameType === 0) {
 
                 const tileMatches: TileSymbols = typeToCheck === 'color'
-                    ? ({ color: firstTile.symbol!.color, symbol: numberToCheck } as TileSymbols)
-                    : ({ color: numberToCheck, symbol: firstTile.symbol } as any);
+                    ? ({ color: firstTile.symbol!.color, symbol: numberToCheck })
+                    : ({ color: numberToCheck, symbol: firstTile.symbol!.symbol });
                 matchingTiles.push(tileMatches);
             }
             if (countForSameType > 1) {
@@ -169,11 +166,11 @@ const listPossiblesMatches = (tileSeries: TileData[], typeToCheck: tileDescripto
     return [];
 }
 
-const findNeighboursForDirection = (directionToCheck: coordinatesTypes, tileToSearch: TileData, tiles: TileData[], factor: number) => {
+const findNeighboursForDirection = (directionToCheck: coordinatesTypes, tileToSearch: TilePosition, tiles: TileData[], factor: number) => {
 
-    const directionValue = tileToSearch.position[directionToCheck];
+    const directionValue = tileToSearch[directionToCheck];
     const oppositeDirection: coordinatesTypes = directionToCheck === 'x' ? 'y' : 'x';
-    const oppositeDirectionValue = tileToSearch.position[oppositeDirection];
+    const oppositeDirectionValue = tileToSearch[oppositeDirection];
     const retVal: TileData[] = [];
 
     for (let i = 1; i < 6; i++) {

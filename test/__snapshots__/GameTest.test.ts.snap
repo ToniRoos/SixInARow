@@ -1,94 +1,64 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Board game logic create inital board 1`] = `
+exports[`Board game create board 1`] = `
 Object {
   "activePlayer": "",
   "sizeX": 3,
   "sizeY": 3,
   "tiles": Array [
     Object {
-      "x": 0,
-      "y": 0,
+      "position": Object {
+        "x": 0,
+        "y": 0,
+      },
     },
     Object {
-      "x": 1,
-      "y": 0,
+      "position": Object {
+        "x": 1,
+        "y": 0,
+      },
     },
     Object {
-      "x": 2,
-      "y": 0,
+      "position": Object {
+        "x": 2,
+        "y": 0,
+      },
     },
     Object {
-      "x": 0,
-      "y": 1,
+      "position": Object {
+        "x": 0,
+        "y": 1,
+      },
     },
     Object {
-      "x": 1,
-      "y": 1,
+      "position": Object {
+        "x": 1,
+        "y": 1,
+      },
     },
     Object {
-      "x": 2,
-      "y": 1,
+      "position": Object {
+        "x": 2,
+        "y": 1,
+      },
     },
     Object {
-      "x": 0,
-      "y": 2,
+      "position": Object {
+        "x": 0,
+        "y": 2,
+      },
     },
     Object {
-      "x": 1,
-      "y": 2,
+      "position": Object {
+        "x": 1,
+        "y": 2,
+      },
     },
     Object {
-      "x": 2,
-      "y": 2,
-    },
-  ],
-}
-`;
-
-exports[`Board game logic move tile 1`] = `
-Object {
-  "activePlayer": "",
-  "sizeX": 3,
-  "sizeY": 3,
-  "tiles": Array [
-    Object {
-      "x": 0,
-      "y": 0,
-    },
-    Object {
-      "x": 1,
-      "y": 0,
-    },
-    Object {
-      "x": 2,
-      "y": 0,
-    },
-    Object {
-      "x": 0,
-      "y": 1,
-    },
-    Object {
-      "color": 1,
-      "symbol": 2,
-      "x": 1,
-      "y": 1,
-    },
-    Object {
-      "x": 2,
-      "y": 1,
-    },
-    Object {
-      "x": 0,
-      "y": 2,
-    },
-    Object {
-      "x": 1,
-      "y": 2,
-    },
-    Object {
-      "x": 2,
-      "y": 2,
+      "position": Object {
+        "x": 2,
+        "y": 2,
+      },
     },
   ],
 }
