@@ -6,9 +6,9 @@ import { getGameStatus } from "./game/getGameStatus";
 import { nextTurn } from "./game/nextTurn";
 import { startGame } from "./game/startGame";
 import { TileStock } from "./tileStock/tileStock";
-import { tileToString } from "./tileToString";
 import { createUserStore } from "./userStore/createUserStore";
 import { UserStore } from "./userStore/userStore";
+import { tileToString } from "./utils/tileToString";
 
 export const enum GameRunningState {
     init = "INIT",
@@ -56,8 +56,6 @@ const game = (): Game => {
     }
 
     const checkMoveInternal = (id: string, tileToPlay: TileData): boolean => {
-
-        console.log(`Tile to play: ${tileToString(tileToPlay)}`);
 
         const tileOnBoard = gameState.board!.getTileForCoordinates(tileToPlay);
         const moveAllowed = checkMove(gameState, id, tileToPlay);

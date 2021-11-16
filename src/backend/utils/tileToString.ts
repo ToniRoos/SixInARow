@@ -1,4 +1,4 @@
-import { TileData, TileSymbols } from "../types";
+import { TileData, TileSymbols } from "../../types";
 
 const tileToString = (tile?: (TileData)) => {
 

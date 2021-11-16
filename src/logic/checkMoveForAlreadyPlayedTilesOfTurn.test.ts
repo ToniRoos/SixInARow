@@ -1,5 +1,5 @@
-import { checkMoveForAlreadyPlayedTilesOfTurn } from "../src/logic/boardLogic";
-import { ColorEnum, SymbolEnum, TileData, TilePosition } from "../src/types";
+import { checkMoveForAlreadyPlayedTilesOfTurn } from "./boardLogic";
+import { ColorEnum, SymbolEnum, TilePosition } from "../types";
 
 describe('Game logic check move by checking played tiles on turn', () => {
 

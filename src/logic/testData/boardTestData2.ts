@@ -1,5 +1,5 @@
-import { ColorEnum, SymbolEnum, TileData } from '../../src/types';
-import { createDefaultField } from './createDefaultField';
+import { ColorEnum, SymbolEnum, TileData } from '../../types';
+import { createDefaultField } from './createDefaultTestField';
 
 export const tilesOnBoard = [
     {

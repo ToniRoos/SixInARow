@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Board } from './Board/Board';
 import Login from './Login/Login';
 import { color1 } from '../types';
@@ -9,12 +9,6 @@ import { routes } from './routing/routes';
 import { AppProvider } from './AppContext';
 
 const queryClient = new QueryClient();
-
-const enum Page {
-    LOGIN,
-    WAITING,
-    BOARD
-}
 
 const App = () => {
 

@@ -4,7 +4,7 @@ import { PlayingFieldTile, TileProps } from './PlayingFieldTile';
 
 interface PlayingFieldListProps {
     tileSize: number;
-    onDropped?: (props: TileProps) => void;
+    onDropped?: (props: TileData) => void;
     tiles: TileData[];
 }
 

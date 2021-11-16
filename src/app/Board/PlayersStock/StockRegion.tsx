@@ -1,7 +1,8 @@
-import * as React from 'react';
+import React from 'react';
 import { TileSymbols } from '../../../types';
 import { StockField } from './StockField';
-import { getTileSize } from '../../getTileSize';
+import { useAppContext } from '../../useAppContext';
+import { StockButton } from './StockButton';
 
 export interface StockRegionProps {
     tilesOnHand?: TileSymbols[];
@@ -11,21 +12,39 @@ export interface StockRegionProps {
 
 const StockRegion: React.FunctionComponent<StockRegionProps> = ({ tilesOnHand, turnActive, onNextButtonClicked }) => {
 
+    const { setTileSize, tileSize } = useAppContext();
+    const stockStileSize = 80;
+
     tilesOnHand = tilesOnHand ? tilesOnHand : [];
-    const tileSize = getTileSize();
     const tilesOnHandRendered = tilesOnHand.map((symbolTile, index) => <StockField
         key={index}
         allowDrag={turnActive}
         tileData={{ position: { x: index, y: 0 }, symbol: symbolTile }}
+        tileSize={stockStileSize}
     />);
 
+    const onhandleMinus = () => {
+        setTileSize(tileSize - 10);
+    }
+
+    const onhandlePlus = () => {
+        setTileSize(tileSize + 10);
+    }
+
     return (
-        <div style={{ width: `${tileSize * tilesOnHandRendered.length}px`, height: `${tileSize}px`, position: "fixed", bottom: "0" }} className="d-flex flex-wrap">
+        <div style={{ width: `${stockStileSize * tilesOnHandRendered.length}px`, height: `${stockStileSize}px`, position: "fixed", bottom: "0" }} className="d-flex flex-wrap">
             {tilesOnHandRendered}
-            {turnActive ? <button type="button" className="btn btn-outline-success" style={{ marginLeft: `${(tileSize * tilesOnHandRendered.length) + 20}px` }}
-                onClick={onNextButtonClicked}>
-                NEXT
-            </button> : undefined}
+            {turnActive ?
+                <StockButton leftSpace={(stockStileSize * tilesOnHandRendered.length) + 20} onClick={onNextButtonClicked}>
+                    NEXT
+                </StockButton>
+                : undefined}
+            <StockButton leftSpace={(stockStileSize * (tilesOnHandRendered.length + 1)) + 20} onClick={onhandleMinus}>
+                ---
+            </StockButton>
+            <StockButton leftSpace={(stockStileSize * (tilesOnHandRendered.length + 2)) + 20} onClick={onhandlePlus}>
+                +++
+            </StockButton>
         </div>
     );
 }

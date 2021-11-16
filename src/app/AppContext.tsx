@@ -1,16 +1,27 @@
-import React, { FunctionComponent, useContext, useState } from "react";
+import { noop } from "lodash";
+import React, { FunctionComponent, useState } from "react";
 
 export interface AppContext {
-    appData?: AppState;
-    setAppData?: (appSate: AppState) => void;
+    appData: AppState;
+    setAppData: (appSate: AppState) => void;
 }
-const appContext = React.createContext<AppContext>({});
+
+const defaultAppState = {
+    sessionId: "",
+    tileSize: 100
+}
+
+const appContext = React.createContext<AppContext>({
+    appData: defaultAppState,
+    setAppData: noop
+});
 
 export interface AppState {
     sessionId: string;
+    tileSize: number;
 }
 const AppProvider: FunctionComponent = ({ children }) => {
-    const [appSate, setAppState] = useState<AppState>();
+    const [appSate, setAppState] = useState<AppState>(defaultAppState);
     return (
         <appContext.Provider value={{ appData: appSate, setAppData: setAppState }}>
             {children}

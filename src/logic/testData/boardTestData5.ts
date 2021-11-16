@@ -1,4 +1,4 @@
-import { ColorEnum, SymbolEnum } from "../../src/types";
+import { ColorEnum, SymbolEnum } from "../../types";
 
 export const data1 = [
     {

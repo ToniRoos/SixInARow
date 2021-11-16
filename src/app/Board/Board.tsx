@@ -6,7 +6,6 @@ import { PlayingField } from './PlayingField/PlayingFIeld';
 import { StatusText } from './PlayingField/StatusText';
 import { useAppContext } from '../useAppContext';
 import { useCheckMove } from './hooks/useCheckMove';
-import { getTileSize } from '../getTileSize';
 import { PlayingFieldList } from './PlayingField/PlayingFieldList';
 import { useGameState } from './hooks/useGameState';
 import { useNextTurn } from './hooks/useNextTurn';
@@ -20,8 +19,7 @@ export interface BoardState {
 
 const Board = () => {
 
-    const tileSize = getTileSize();
-    const { sessionId: id } = useAppContext();
+    const { sessionId: id, tileSize } = useAppContext();
 
     const { board, activePlayer, activeTurn, tilesOnHand } = useGameState(id!);
     const { nextTurn } = useNextTurn(id!);

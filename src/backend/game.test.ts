@@ -1,6 +1,6 @@
 
-import { game } from "../src/backend/game";
-import { ColorEnum, TileSymbols } from "../src/types";
+import { game } from "./game";
+import { TileSymbols } from "../types";
 
 describe('Board game', () => {
 

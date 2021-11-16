@@ -1,5 +1,5 @@
-import { TileData } from "../../src/types";
-import { printBoardToConsole } from "../../src/app/Board/printBoardToConsole";
+import { TileData } from "../../types";
+import { printBoardToConsole } from "../../app/Board/printBoardToConsole";
 
 const createDefaultField = (fieldSize: number, tilesOnBoard: TileData[]): TileData[] => {
 
@@ -22,9 +22,7 @@ const createDefaultField = (fieldSize: number, tilesOnBoard: TileData[]): TileDa
 
         }
     }
-
     // printBoardToConsole(retVal);
-
     return retVal;
 }
 

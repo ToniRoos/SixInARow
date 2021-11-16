@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { drawSymbol } from '../components/Symbol';
+import { SymbolSwitch } from '../components/SymbolSwitch';
 import { TileData } from '../../../types';
 import { Draggable } from '../components/Draggable';
 import { TilePositionContainer } from '../components/TilePositionContainer';
 
 export interface TileProps extends TileData {
-    tileSize?: number;
+    tileSize: number;
     onDropped?: (props: TileData) => void;
 }
 
-const PlayingFieldTile: React.FunctionComponent<TileProps> = ({ position, symbol, onDropped }) => {
+const PlayingFieldTile: React.FunctionComponent<TileProps> = ({ position, symbol, tileSize, onDropped }) => {
 
     const [hover, setHover] = React.useState(false);
 
@@ -38,8 +38,15 @@ const PlayingFieldTile: React.FunctionComponent<TileProps> = ({ position, symbol
             onDragOver={event => handleAllowDrop(event)}
             onDragLeave={() => setHover(false)}
         >
-            <TilePositionContainer active={hover} tilePosition={position} tileFilled={symbol && true}>
-                {symbol ? drawSymbol(symbol) : null}
+            <TilePositionContainer
+                active={hover}
+                tilePosition={position}
+                tileFilled={symbol && true}
+                tileSize={tileSize}
+            >
+                {symbol
+                    ? <SymbolSwitch {...symbol} tileSize={tileSize} />
+                    : null}
             </TilePositionContainer>
         </Draggable>
     );

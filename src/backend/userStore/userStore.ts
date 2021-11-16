@@ -1,6 +1,6 @@
 import { TileData } from "../../types";
-import { createUUID } from "../helper";
-import { tileSymbolToString, tileToString } from "../tileToString";
+import { createUUID } from "../utils/createUUID";
+import { tileSymbolToString } from "../utils/tileToString";
 import { UserSessionData } from "./UserSessionData";
 
 export interface UserStore {
@@ -64,8 +64,6 @@ const userStore = (): UserStore => {
             tile.color === playedTile.symbol!.color
             && tile.symbol === playedTile.symbol!.symbol
         );
-
-        console.log(`Tile matched on hand: ${tileSymbolToString(tileMatchedOnHand)}`);
 
         const indexToRemove = player.tilesOnHand.indexOf(tileMatchedOnHand!);
         const removed = player.tilesOnHand.splice(indexToRemove, 1)[0];
