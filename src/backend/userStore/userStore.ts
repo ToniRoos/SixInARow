@@ -1,13 +1,17 @@
+import { TileData } from "../../types";
 import { createUUID } from "../helper";
+import { tileSymbolToString, tileToString } from "../tileToString";
 import { UserSessionData } from "./UserSessionData";
 
 export interface UserStore {
     createUserSession: (name: string) => string;
     removeSession: (id: string) => void;
     getUserSessions: () => UserSessionData[];
-    getSession: (id?: string) => UserSessionData;
+    getSession: (id?: string) => UserSessionData | undefined;
     getUserNames: () => string[];
     countUsers: () => number;
+    moveTileToActiveTurnTiles: (id: string, playedTile: TileData) => void;
+    getNextPlayer: (id: string) => UserSessionData;
 }
 
 const userStore = (): UserStore => {
@@ -18,9 +22,8 @@ const userStore = (): UserStore => {
         return userStore;
     };
 
-    const getSession = (id?: string): UserSessionData => {
-        console.log('get session: ', id);
-        const session = userStore.filter(item => item.id === id)[0];
+    const getSession = (id?: string): UserSessionData | undefined => {
+        const session = userStore.find(item => item.id === id);
         return session;
     };
 
@@ -58,13 +61,44 @@ const userStore = (): UserStore => {
         }
     }
 
+    const moveTileToActiveTurnTiles = (id: string, playedTile: TileData) => {
+
+        const player = getSession(id)!;
+        const tileMatchedOnHand = player.tilesOnHand.find(tile =>
+            tile.color === playedTile.symbol!.color
+            && tile.symbol === playedTile.symbol!.symbol
+        );
+
+        console.log(`Tile matched on hand: ${tileSymbolToString(tileMatchedOnHand)}`);
+
+        const indexToRemove = player.tilesOnHand.indexOf(tileMatchedOnHand!);
+        const removed = player.tilesOnHand.splice(indexToRemove, 1)[0];
+        console.log(`Tile to remove: ${tileSymbolToString(removed)}`);
+        player.tilesOnTurn.push({ ...playedTile });
+    }
+
+    const getNextPlayer = (id: string): UserSessionData => {
+
+        let nextPlayer: UserSessionData;
+        const sessionIndex = userStore.findIndex(player => player.id === id);
+        if (sessionIndex < countUsers() - 1) {
+            nextPlayer = userStore[sessionIndex + 1];
+        } else {
+            nextPlayer = userStore[0];
+        }
+
+        return nextPlayer;
+    }
+
     return {
         getUserSessions,
         createUserSession,
         countUsers,
         getSession,
         getUserNames,
-        removeSession
+        removeSession,
+        moveTileToActiveTurnTiles,
+        getNextPlayer
     };
 };
 

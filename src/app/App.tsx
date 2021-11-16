@@ -1,11 +1,12 @@
 import * as React from 'react';
-import Board, { BoardState } from './Board/Board';
-import { ws } from '../logic/ws';
+import { Board } from './Board/Board';
 import Login from './Login/Login';
-import { color1, Command } from '../types';
+import { color1 } from '../types';
 import Waiting from './Waiting/Waiting';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { routes } from './routing/routes';
+import { AppProvider } from './AppContext';
 
 const queryClient = new QueryClient();
 
@@ -17,40 +18,20 @@ const enum Page {
 
 const App = () => {
 
-    // const [page, setPage] = React.useState<Page>();
-    // const [boardState, setBoardState] = React.useState<BoardState>();
-
-    // React.useEffect(() => {
-
-    //     ws.getSocket().onmessage = (e) => {
-    //         console.log('##########');
-    //         const dataParsed: Command = JSON.parse(e.data);
-
-    //         if (dataParsed.command === 'SetId') {
-    //             setPage(Page.WAITING);
-    //             const id = dataParsed.id ? dataParsed.id : "";
-    //             ws.setId(id);
-    //             // setId(() => dataParsed.data);
-    //         } else if (dataParsed.command === 'StartGame') {
-
-    //             setBoardState(dataParsed.data);
-    //             setPage(Page.BOARD);
-    //         }
-    //     }
-    // }, []);
-
     return (
-        <QueryClientProvider client={queryClient}>
-            <div className={`vh-100 d-flex flex-column align-items-center justify-content-center bg-${color1}`}>
-                <BrowserRouter>
-                    <Routes>
-                        <Route path="/" element={<Login />} />
-                        <Route path="/waiting/:sessionId" element={<Waiting />} />
-                        <Route path="/bord" element={<Board />} />
-                    </Routes>
-                </BrowserRouter>
-            </div>
-        </QueryClientProvider>
+        <AppProvider>
+            <QueryClientProvider client={queryClient}>
+                <div className={`vh-100 d-flex flex-column align-items-center justify-content-center bg-${color1}`}>
+                    <BrowserRouter>
+                        <Routes>
+                            <Route path={routes.login} element={<Login />} />
+                            <Route path={`/${routes.waiting}`} element={<Waiting />} />
+                            <Route path={`/${routes.board}`} element={<Board />} />
+                        </Routes>
+                    </BrowserRouter>
+                </div>
+            </QueryClientProvider>
+        </AppProvider>
     );
 };
 

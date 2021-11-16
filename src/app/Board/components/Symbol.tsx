@@ -1,7 +1,7 @@
 import React from "react";
-import { SymbolEnum, ColorEnum } from "../../../types";
+import { ColorEnum, SymbolEnum, TileSymbols } from "../../../types";
 
-export const drawSymbol = (symbol?: SymbolEnum, color?: ColorEnum) => {
+export const drawSymbol = ({ symbol, color }: TileSymbols) => {
 
     let retVal = <svg />;
     const colorClassName = `symbol color-${ColorEnum[color ? color : 0]}`;

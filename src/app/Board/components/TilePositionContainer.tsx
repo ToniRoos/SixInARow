@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { TileData } from '../../../types';
+import { TilePosition } from '../../../types';
 
 interface TilePositionContainerProps {
     active: boolean;
     tileFilled?: boolean;
-    position: TileData;
+    tilePosition: TilePosition;
 }
 
-const TilePositionContainer: React.FunctionComponent<TilePositionContainerProps> = ({ children, active, tileFilled, position }) => {
+const TilePositionContainer: React.FunctionComponent<TilePositionContainerProps> = ({ children, active, tileFilled, tilePosition }) => {
 
     const tileSize = 100;
 
@@ -17,8 +17,8 @@ const TilePositionContainer: React.FunctionComponent<TilePositionContainerProps>
     return (
         <div style={{
             width: `${tileSize}px`, height: `${tileSize}px`,
-            marginLeft: `${position.x * tileSize}px`,
-            marginTop: `${position.y * tileSize}px`
+            marginLeft: `${tilePosition.x * tileSize}px`,
+            marginTop: `${tilePosition.y * tileSize}px`
         }} className={`${bgColor} border position-absolute rounded d-flex align-items-center justify-content-center`}>
             {children}
         </div>

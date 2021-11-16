@@ -1,11 +1,11 @@
 import { TileSymbols } from "../../types";
 
-export interface StockType {
+export interface TileStock {
 
     getNextTiles: (number: number) => TileSymbols[];
 }
 
-const tileStock = (stockProp: TileSymbols[]): StockType => {
+const tileStock = (stockProp: TileSymbols[]): TileStock => {
 
     const stock: TileSymbols[] = stockProp;
 

@@ -1,7 +1,0 @@
-POST http://localhost:3000/user
-Accept: application/json
-Content-Type: application/json
-
-{
-    "user": "test"
-}

@@ -36,22 +36,24 @@ export enum SymbolEnum {
 }
 
 export interface TileSymbols {
-    id?: number;
-    color?: ColorEnum;
-    symbol?: SymbolEnum;
+    color: ColorEnum;
+    symbol: SymbolEnum;
 }
 
-export interface TileData extends TileSymbols {
+export interface TilePosition {
     x: number;
     y: number;
-    allowDrag?: boolean;
+}
+
+export interface TileData {
+    position: TilePosition;
+    symbol?: TileSymbols;
 }
 
 export interface BoardData {
     tiles: TileData[];
     sizeX: number;
     sizeY: number;
-    activePlayer: string;
 }
 
 export const color1 = "warning";

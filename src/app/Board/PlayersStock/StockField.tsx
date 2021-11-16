@@ -4,15 +4,17 @@ import { TileData } from '../../../types';
 import { Draggable } from '../components/Draggable';
 import { TilePositionContainer } from '../components/TilePositionContainer';
 
-export interface TileProps extends TileData {
+export interface TileProps {
+    tileData: TileData;
     tileSize?: number;
+    allowDrag?: boolean;
     onDropped?: (props: TileProps) => void;
 }
 
 const StockField = (props: TileProps) => {
 
     const handleDrag = (ev: React.DragEvent<HTMLDivElement>): void => {
-        ev.dataTransfer.setData("text", JSON.stringify(props));
+        ev.dataTransfer.setData("text", JSON.stringify(props.tileData));
     }
 
     return (
@@ -20,8 +22,8 @@ const StockField = (props: TileProps) => {
             allowDrag={props.allowDrag}
             onDragStart={(event) => handleDrag(event)}
         >
-            <TilePositionContainer active={true} position={props} tileFilled={props.color && true}>
-                {drawSymbol(props.symbol, props.color)}
+            <TilePositionContainer active={true} tilePosition={props.tileData.position} tileFilled={props.tileData.symbol && true}>
+                {drawSymbol(props.tileData.symbol!)}
             </TilePositionContainer>
         </Draggable>
     );

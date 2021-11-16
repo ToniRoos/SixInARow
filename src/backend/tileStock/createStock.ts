@@ -1,13 +1,14 @@
 import { TileSymbols } from "../../types";
-import { StockType, tileStock } from "./tileStock";
+import { stockConfig } from "./stockConfig";
+import { TileStock, tileStock } from "./tileStock";
 
 const create = () => {
 
     const stock: TileSymbols[] = [];
 
-    const amountOfColors = 6;
-    const amountOfShapes = 6;
-    const amountOfSetsPerColor = 3;
+    const amountOfColors = stockConfig.amountOfColors;
+    const amountOfShapes = stockConfig.amountOfShapes;
+    const amountOfSetsPerColor = stockConfig.amountOfSetsPerColor;
 
     for (let m = 0; m < amountOfSetsPerColor; m++) {
         for (let color = 1; color < amountOfColors + 1; color++) {
@@ -20,4 +21,4 @@ const create = () => {
     return tileStock(stock);
 }
 
-export const createInitalStock = (): StockType => create();
+export const createStock = (): TileStock => create();

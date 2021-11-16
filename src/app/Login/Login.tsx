@@ -1,48 +1,40 @@
 
 import * as React from 'react';
 import { useQuery } from 'react-query';
-import { useNavigate } from 'react-router';
-import { color1, color2 } from '../../types';
+import { color1 } from '../../types';
 import { addPlayer } from '../api/api';
-import { LoginButton } from './LoginButton';
-import { LoginModal } from './LoginModal';
+import { useAppRouter } from '../routing/useAppRouter';
+import { useAppContext } from '../useAppContext';
+import { Button } from '../components/Button';
+import { Modal } from '../components/Modal';
 import { UserInput } from './UserInput';
 
 const Login: React.FunctionComponent = () => {
 
-    const nav = useNavigate();
+    const { setSessionId } = useAppContext();
+    const { navToWaiting } = useAppRouter();
     const [name, setName] = React.useState("");
-    const { status, data, refetch } = useQuery('repoData', () => addPlayer(name), {
+    const { status, data, refetch } = useQuery('addPlayer', () => addPlayer(name), {
         enabled: false
     });
-
-    console.log(`### ${data}`);
 
     React.useEffect(() => {
 
         if (status === "success" && data) {
-            nav(`waiting/:${data.id}`);
+            setSessionId(data.id);
+            navToWaiting();
         }
 
     }, [data]);
-
-    // if (status === "success") {
-
-    //     if (data) {
-    //         nav(`waiting/:${data.id}`);
-    //         return <React.Fragment />
-    //         // onLoginSuccess(data.id);
-    //     }
-    // }
 
     const buttonDisabled = name === "";
 
     return (
         <div className={`vh-100 d-flex flex-column align-items-center justify-content-center bg-${color1}`}>
-            <LoginModal>
+            <Modal>
                 <UserInput onInput={setName} />
-                <LoginButton disabled={buttonDisabled} onClick={refetch} />
-            </LoginModal>
+                <Button title="Join Game" disabled={buttonDisabled} onClick={refetch} />
+            </Modal>
         </div>
     );
 };

@@ -1,0 +1,29 @@
+import { checkMoveForAlreadyPlayedTilesOfTurn, findMatchingTilesByCheckingNeighbours } from "../../logic/boardLogic";
+import { TileData } from "../../types";
+import { GameState } from "../game2";
+
+const checkMove = (gameState: GameState, id: string, tileToMove: TileData): boolean => {
+
+    const board = gameState.board!;
+    const tileOnBoard = board.getTileForCoordinates(tileToMove);
+    const tilesAtBoard = board.getBoardData().tiles;
+
+    const tileMatches = findMatchingTilesByCheckingNeighbours(tileOnBoard, tileToMove.symbol?.color, tileToMove.symbol?.symbol, tilesAtBoard);
+    if (!tileMatches) {
+        return false;
+    }
+
+    let sessionData = gameState.userStore.getSession(id);
+    let tilesOnTurn = sessionData ? sessionData.tilesOnTurn : [];
+
+    console.log("Tiles on turn: " + JSON.stringify(tilesOnTurn))
+
+    const allowMove = checkMoveForAlreadyPlayedTilesOfTurn(tilesOnTurn, tileOnBoard);
+
+    // if (allowMove && tilesOnTurn.length === 0) {
+    //     // const allowMoveForRow = tilesAtBoard.filter(tile => tile.x = tileToMove.x && Math.abs(tile.y - tileToMove.y) === 1)
+    // }
+    return allowMove;
+}
+
+export { checkMove };

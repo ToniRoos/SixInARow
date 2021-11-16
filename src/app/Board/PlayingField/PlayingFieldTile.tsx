@@ -6,16 +6,16 @@ import { TilePositionContainer } from '../components/TilePositionContainer';
 
 export interface TileProps extends TileData {
     tileSize?: number;
-    onDropped?: (props: TileProps) => void;
+    onDropped?: (props: TileData) => void;
 }
 
-const BoardField = (props: TileProps) => {
+const PlayingFieldTile: React.FunctionComponent<TileProps> = ({ position, symbol, onDropped }) => {
 
     const [hover, setHover] = React.useState(false);
 
     const handleAllowDrop = (ev: React.DragEvent<HTMLDivElement>): void => {
 
-        if (props.color) {
+        if (symbol) {
             return;
         }
 
@@ -26,8 +26,8 @@ const BoardField = (props: TileProps) => {
     const handleDrop = (ev: React.DragEvent<HTMLDivElement>): void => {
         ev.preventDefault();
         var data = JSON.parse(ev.dataTransfer.getData("text")) as TileProps;
-        if (props.onDropped) {
-            props.onDropped({ x: props.x, y: props.y, color: data.color, symbol: data.symbol, id: data.id });
+        if (onDropped) {
+            onDropped({ position, symbol: data.symbol });
         }
         setHover(false);
     }
@@ -38,11 +38,11 @@ const BoardField = (props: TileProps) => {
             onDragOver={event => handleAllowDrop(event)}
             onDragLeave={() => setHover(false)}
         >
-            <TilePositionContainer active={hover} position={props} tileFilled={props.color && true}>
-                {drawSymbol(props.symbol, props.color)}
+            <TilePositionContainer active={hover} tilePosition={position} tileFilled={symbol && true}>
+                {symbol ? drawSymbol(symbol) : null}
             </TilePositionContainer>
         </Draggable>
     );
 }
 
-export { BoardField };
+export { PlayingFieldTile };

@@ -1,10 +1,15 @@
 import * as React from 'react';
-import { ws } from '../../logic/ws';
-import { TileProps } from './PlayingField/BoardField';
+import { TileProps } from './PlayingField/PlayingFieldTile';
 import { BoardData, TileSymbols } from '../../types';
 import { StockRegion } from './PlayersStock/StockRegion';
 import { PlayingField } from './PlayingField/PlayingFIeld';
 import { StatusText } from './PlayingField/StatusText';
+import { useAppContext } from '../useAppContext';
+import { useCheckMove } from './hooks/useCheckMove';
+import { getTileSize } from '../getTileSize';
+import { PlayingFieldList } from './PlayingField/PlayingFieldList';
+import { useGameState } from './hooks/useGameState';
+import { useNextTurn } from './hooks/useNextTurn';
 
 export interface BoardState {
     turnActive: boolean;
@@ -15,29 +20,33 @@ export interface BoardState {
 
 const Board = () => {
 
-    const [gameData, setGameData] = React.useState<BoardState>();
+    const tileSize = getTileSize();
+    const { sessionId: id } = useAppContext();
 
-    if (!gameData) {
+    const { board, activePlayer, activeTurn, tilesOnHand } = useGameState(id!);
+    const { nextTurn } = useNextTurn(id!);
+    const { checkTileForMove } = useCheckMove(id!);
+
+    if (!board) {
         return <React.Fragment />;
     }
 
-    React.useEffect(() => {
-
-        ws.onCommand('RefreshBoard', (command) => {
-
-            setGameData(() => { return { ...gameData, ...command.data } })
-        });
-    }, []);
-
-    const checkDrop = (data: TileProps) => {
-        // ws.sendCommand({ command: 'CheckMove', data: data });
+    const handleNextButtonClick = () => {
+        nextTurn();
     }
 
-    return <div className="vh-100 d-flex flex-column align-items-center">
-        <StatusText statusText={gameData.turnActive ? "It's your turn" : `It's turn of ${gameData.board.activePlayer}`} />
-        <PlayingField board={gameData.board} handleDrop={checkDrop} />
-        <StockRegion tilesOnHand={gameData.tilesOnHand} turnActive={gameData.turnActive} />
-    </div>
-}
+    return (
+        <div className="vh-100 d-flex flex-column align-items-center">
+            <StatusText statusText={activeTurn ? "It's your turn" : `It's turn of ${activePlayer}`} />
+            <PlayingField sizeX={board.sizeX} sizeY={board.sizeY} tileSize={tileSize} >
+                <PlayingFieldList tileSize={tileSize} tiles={board.tiles} onDropped={checkTileForMove} />
+            </PlayingField>
+            <StockRegion
+                tilesOnHand={tilesOnHand}
+                turnActive={activeTurn}
+                onNextButtonClicked={handleNextButtonClick} />
+        </div>
+    );
+};
 
-export default Board;
+export { Board };
