@@ -1,5 +1,5 @@
-import { TilePosition } from "../../types";
-import { stockConfig } from "../tileStock/stockConfig";
+import { TilePosition } from "../../../types";
+import { stockConfig } from "../../tileStock/stockConfig";
 
 const checkMoveForAlreadyPlayedTilesOfTurn = (playedTilesPosition: TilePosition[], tileOnBoardPosition: TilePosition) => {
 

@@ -1,19 +1,19 @@
 import { TileData, TilePosition } from "../../types";
 import { stockConfig } from "../tileStock/stockConfig";
 
-export const enum CoordinatesTypes {
-    x = 'x',
-    y = 'y'
+export const enum CoordinatesType {
+    horizontal = 'x',
+    vertical = 'y'
 }
 export const enum ForwardBackward {
     forward = -1,
     backward = 1
 };
-const findNeighboursForDirection = (directionToCheck: CoordinatesTypes, tileToSearch: TilePosition, tilesOfBoard: TileData[], forwardBackward: ForwardBackward) => {
+const findNeighboursForDirection = (directionToCheck: CoordinatesType, tileToLookForNeighbours: TilePosition, tilesOfBoard: TileData[], forwardBackward: ForwardBackward): TileData[] => {
 
-    const directionValue = tileToSearch[directionToCheck];
-    const oppositeDirection = directionToCheck === CoordinatesTypes.x ? 'y' : 'x';
-    const oppositeDirectionValue = tileToSearch[oppositeDirection];
+    const directionValue = tileToLookForNeighbours[directionToCheck];
+    const oppositeDirection = directionToCheck === CoordinatesType.horizontal ? 'y' : 'x';
+    const oppositeDirectionValue = tileToLookForNeighbours[oppositeDirection];
     const retVal: TileData[] = [];
 
     for (let i = 1; i < stockConfig.amountOfTiles; i++) {
@@ -31,4 +31,30 @@ const findNeighboursForDirection = (directionToCheck: CoordinatesTypes, tileToSe
     return retVal;
 };
 
-export { findNeighboursForDirection };
+const findNeighboursHorizontal = (tileToLookForNeighbours: TilePosition, tilesOfBoard: TileData[]): TileData[] => {
+
+    const neighboursHorizontalForward = findNeighboursForDirection(CoordinatesType.horizontal, tileToLookForNeighbours, tilesOfBoard, ForwardBackward.forward);
+    const neighboursHorizontalBackward = findNeighboursForDirection(CoordinatesType.horizontal, tileToLookForNeighbours, tilesOfBoard, ForwardBackward.backward);
+
+    return [
+        ...neighboursHorizontalForward,
+        ...neighboursHorizontalBackward
+    ];
+};
+
+const findNeighboursVertical = (tileToLookForNeighbours: TilePosition, tilesOfBoard: TileData[]): TileData[] => {
+
+    const neighboursVerticalForward = findNeighboursForDirection(CoordinatesType.vertical, tileToLookForNeighbours, tilesOfBoard, ForwardBackward.forward);
+    const neighboursVerticalBackward = findNeighboursForDirection(CoordinatesType.vertical, tileToLookForNeighbours, tilesOfBoard, ForwardBackward.backward);
+
+    return [
+        ...neighboursVerticalForward,
+        ...neighboursVerticalBackward
+    ];
+};
+
+export {
+    findNeighboursForDirection,
+    findNeighboursHorizontal,
+    findNeighboursVertical
+};

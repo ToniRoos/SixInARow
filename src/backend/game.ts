@@ -1,14 +1,13 @@
 
 import { BoardData, TileData, TileSymbols } from "../types";
 import { Board } from "./board/board";
-import { checkMove } from "./game/checkMove";
+import { checkMove } from "./game/checksForMove/checkMove";
 import { getGameStatus } from "./game/getGameStatus";
 import { nextTurn } from "./game/nextTurn";
 import { startGame } from "./game/startGame";
 import { TileStock } from "./tileStock/tileStock";
 import { createUserStore } from "./userStore/createUserStore";
 import { UserStore } from "./userStore/userStore";
-import { tileToString } from "./utils/tileToString";
 
 export const enum GameRunningState {
     init = "INIT",
@@ -60,7 +59,6 @@ const game = (): Game => {
         const tileOnBoard = gameState.board!.getTileForCoordinates(tileToPlay);
         const moveAllowed = checkMove(gameState, id, tileToPlay);
 
-        console.log(`Tile on board: ${tileToString(tileOnBoard)}`);
         if (moveAllowed) {
             gameState.userStore.moveTileToActiveTurnTiles(id, tileToPlay);
             gameState.board!.placeTileAtBoard(tileToPlay);

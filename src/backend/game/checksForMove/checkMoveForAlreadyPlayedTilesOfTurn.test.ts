@@ -1,4 +1,4 @@
-import { ColorEnum, SymbolEnum, TilePosition } from "../../types";
+import { ColorEnum, SymbolEnum, TilePosition } from "../../../types";
 import { checkMoveForAlreadyPlayedTilesOfTurn } from "./checkMoveForAlreadyPlayedTilesOfTurn";
 
 describe('Game logic check move by checking played tiles on turn', () => {

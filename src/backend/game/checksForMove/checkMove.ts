@@ -1,15 +1,15 @@
 import { checkMoveForAlreadyPlayedTilesOfTurn } from "./checkMoveForAlreadyPlayedTilesOfTurn";
-import { TileData, TilePosition } from "../../types";
-import { GameState } from "../game";
-import { findMatchingTilesByCheckingNeighbours } from "../board/findMatchingTilesByCheckingNeighbours";
+import { TileData, TilePosition } from "../../../types";
+import { GameState } from "../../game";
+import { checkIfTileFitsByCheckingNeighbours } from "./checkIfTileFitsByCheckingNeighbours";
 
 const checkMove = (gameState: GameState, id: string, tileToMove: TileData): boolean => {
 
     const board = gameState.board!;
     const tileOnBoard = board.getTileForCoordinates(tileToMove);
-    const tilesAtBoard = board.getBoardData().tiles;
+    const tilesOnBoard = board.getBoardData().tiles;
 
-    const tileMatches = findMatchingTilesByCheckingNeighbours(tileOnBoard.position, tileToMove.symbol?.color, tileToMove.symbol?.symbol, tilesAtBoard);
+    const tileMatches = checkIfTileFitsByCheckingNeighbours(tileOnBoard.position, tileToMove.symbol?.color, tileToMove.symbol?.symbol, tilesOnBoard);
     if (!tileMatches) {
         return false;
     }
