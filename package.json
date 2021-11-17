@@ -5,11 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
-    "build:backend": "tsc --outDir dist src/backend/index.ts",
+    "build:backend": "tsc --outDir dist src/backend/server.ts",
     "start:dev": "webpack-dev-server --config webpack.dev.js",
-    "start:backend": "node dist/backend/index.js",
-    "test": "jest",
-    "start:server": "ts-node ./src/backend/server.ts"
+    "start:backend": "ts-node ./src/backend/server.ts",
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",

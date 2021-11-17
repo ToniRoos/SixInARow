@@ -1,7 +1,6 @@
-import { TileData } from "../../types";
-import { printBoardToConsole } from "../../app/Board/printBoardToConsole";
+import { TileData } from "../../../types";
 
-const createDefaultField = (fieldSize: number, tilesOnBoard: TileData[]): TileData[] => {
+const createDefaultTestField = (fieldSize: number, tilesOnBoard: TileData[]): TileData[] => {
 
     const retVal: TileData[] = [];
     for (let i = 0; i < fieldSize; i++) {
@@ -26,4 +25,4 @@ const createDefaultField = (fieldSize: number, tilesOnBoard: TileData[]): TileDa
     return retVal;
 }
 
-export { createDefaultField };
+export { createDefaultTestField };

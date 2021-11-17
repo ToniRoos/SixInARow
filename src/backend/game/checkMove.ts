@@ -1,6 +1,7 @@
-import { checkMoveForAlreadyPlayedTilesOfTurn, findMatchingTilesByCheckingNeighbours } from "../../logic/boardLogic";
+import { checkMoveForAlreadyPlayedTilesOfTurn } from "./checkMoveForAlreadyPlayedTilesOfTurn";
 import { TileData, TilePosition } from "../../types";
 import { GameState } from "../game";
+import { findMatchingTilesByCheckingNeighbours } from "../board/findMatchingTilesByCheckingNeighbours";
 
 const checkMove = (gameState: GameState, id: string, tileToMove: TileData): boolean => {
 
@@ -15,8 +16,6 @@ const checkMove = (gameState: GameState, id: string, tileToMove: TileData): bool
 
     let sessionData = gameState.userStore.getSession(id);
     let tilesOnTurn = sessionData ? sessionData.tilesOnTurn : [];
-
-    console.log("Tiles on turn: " + JSON.stringify(tilesOnTurn))
 
     const tilesOnTurnPosition: TilePosition[] = tilesOnTurn.map(tile => ({ ...tile.position }));
     const allowMove = checkMoveForAlreadyPlayedTilesOfTurn(tilesOnTurnPosition, tileOnBoard.position);

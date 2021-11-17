@@ -1,5 +1,6 @@
-import { checkBoardSize } from "../../logic/boardLogic";
-import { BoardData, TileData, TileSymbols } from "../../types";
+
+import { checkBoardSize } from "./checkBoardSize";
+import { BoardData, TileData } from "../../types";
 import { createBoard } from "./createBoard";
 
 export interface Board {

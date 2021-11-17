@@ -1,11 +1,10 @@
-
-import { printBoardToConsole } from "../app/Board/printBoardToConsole";
-import { ColorEnum, SymbolEnum, TilePosition, TileData } from "../types";
-import { findMatchingTilesByCheckingNeighbours } from "./boardLogic";
-import { data1 } from "./testData/boardTestData1";
-import { data2 } from "./testData/boardTestData2";
-import { data3 } from "./testData/boardTestData3";
-import { data4 } from "./testData/boardTestData4";
+import { printBoardToConsole } from "../../app/Board/printBoardToConsole";
+import { ColorEnum, SymbolEnum, TilePosition, TileData } from "../../types";
+import { findMatchingTilesByCheckingNeighbours } from "./findMatchingTilesByCheckingNeighbours";
+import { data1 } from "./fixtures/boardTestData1";
+import { data2 } from "./fixtures/boardTestData2";
+import { data3 } from "./fixtures/boardTestData3";
+import { data4 } from "./fixtures/boardTestData4";
 
 describe('Game logic check move by matching neighbours', () => {
 
