@@ -8,7 +8,7 @@ export interface AppContext {
 
 const defaultAppState = {
     sessionId: "",
-    tileSize: 100
+    tileSize: 70
 }
 
 const appContext = React.createContext<AppContext>({

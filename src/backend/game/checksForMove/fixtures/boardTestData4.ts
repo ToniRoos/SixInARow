@@ -1,8 +1,7 @@
-import { ColorEnum, SymbolEnum, TileData } from '../../../types';
-import { createDefaultTestField } from './createDefaultTestField';
+import { TileData, SymbolEnum, ColorEnum } from "../../../../types";
+import { createDefaultTestField } from "../../../board/fixtures/createDefaultTestField";
 
-export const tilesOnBoard: TileData[] = [
-
+const tilesOnBoard: TileData[] = [
     {
         position: { x: 2, y: 1, },
         symbol: {

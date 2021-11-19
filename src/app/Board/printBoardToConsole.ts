@@ -1,18 +1,24 @@
-import { TileData } from "../../types";
+import { TileData, TilePosition } from "../../types";
 
-const printBoardToConsole = (board: TileData[], tileToBePlaced?: TileData) => {
+const printBoardToConsole = (board: TileData[], tilesToBePlaced?: TileData[]) => {
 
     const table: [string[]] = [[]];
     for (let index = 0; index < 6; index++) {
 
         const row = board.filter(tile => tile.position.y === index).map((tile: TileData) => {
 
-            if (tileToBePlaced
-                && tileToBePlaced.position.x === tile.position.x
-                && tileToBePlaced.position.y === tile.position.y) {
+            if (tilesToBePlaced) {
 
-                const col = `[ C${tileToBePlaced.symbol!.color}:S${tileToBePlaced.symbol!.symbol} ]`;
-                return col;
+                const tileToPlace = tilesToBePlaced.find(
+                    tileToPlace =>
+                        tileToPlace.position.x === tile.position.x
+                        && tileToPlace.position.y === tile.position.y
+                );
+
+                if (tileToPlace) {
+                    const col = `[ C${tileToPlace.symbol!.color}:S${tileToPlace.symbol!.symbol} ]`;
+                    return col;
+                }
             }
 
             if (tile.symbol) {

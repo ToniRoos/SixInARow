@@ -1,10 +1,11 @@
 import { printBoardToConsole } from "../../../app/Board/printBoardToConsole";
 import { ColorEnum, SymbolEnum, TilePosition, TileData } from "../../../types";
 import { checkIfTileFitsByCheckingNeighbours } from "./checkIfTileFitsByCheckingNeighbours";
-import { data1 } from "../../board/fixtures/boardTestData1";
-import { data2 } from "../../board/fixtures/boardTestData2";
-import { data3 } from "../../board/fixtures/boardTestData3";
-import { data4 } from "../../board/fixtures/boardTestData4";
+import { data1 } from "./fixtures/boardTestData1";
+import { data2 } from "./fixtures/boardTestData2";
+import { data3 } from "./fixtures/boardTestData3";
+import { data4 } from "./fixtures/boardTestData4";
+import { data5 } from "./fixtures/boardTestData5";
 
 describe('Game logic check move by matching neighbours', () => {
 
@@ -83,7 +84,7 @@ describe('Game logic check move by matching neighbours', () => {
         symbol: SymbolEnum.hash
       }
     }
-    printBoardToConsole(data4, tileToSearch);
+    printBoardToConsole(data4, [tileToSearch]);
     const tiles: TileData[] = data4;
 
     // ACT
@@ -102,7 +103,7 @@ describe('Game logic check move by matching neighbours', () => {
       }
     }
     const tiles: TileData[] = data2;
-    printBoardToConsole(data2, tileToSearch);
+    printBoardToConsole(data2, [tileToSearch]);
 
     // ACT
     const allowMove = checkIfTileFitsByCheckingNeighbours(tileToSearch.position, tileToSearch.symbol?.color, tileToSearch.symbol?.symbol, tiles);
@@ -120,7 +121,7 @@ describe('Game logic check move by matching neighbours', () => {
       }
     }
     const tiles: TileData[] = data2;
-    printBoardToConsole(data2, tileToSearch);
+    printBoardToConsole(data2, [tileToSearch]);
 
     // ACT
     const allowMove = checkIfTileFitsByCheckingNeighbours(tileToSearch.position, tileToSearch.symbol?.color, tileToSearch.symbol?.symbol, tiles);
@@ -138,7 +139,7 @@ describe('Game logic check move by matching neighbours', () => {
       }
     }
     const tiles: TileData[] = data2;
-    printBoardToConsole(data2, tileToSearch);
+    printBoardToConsole(data2, [tileToSearch]);
 
     // ACT
     const allowMove = checkIfTileFitsByCheckingNeighbours(tileToSearch.position, tileToSearch.symbol?.color, tileToSearch.symbol?.symbol, tiles);

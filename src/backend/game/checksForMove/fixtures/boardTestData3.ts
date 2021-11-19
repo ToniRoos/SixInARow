@@ -1,8 +1,7 @@
-import { ColorEnum, SymbolEnum, TileData } from "../../../types";
-import { createDefaultTestField } from "./createDefaultTestField";
+import { SymbolEnum, ColorEnum, TileData } from "../../../../types";
+import { createDefaultTestField } from "../../../board/fixtures/createDefaultTestField";
 
 const tilesOnBoard: TileData[] = [
-
     {
         position: {
             x: 2,
@@ -43,6 +42,18 @@ const tilesOnBoard: TileData[] = [
             color: ColorEnum.purple
         }
     },
+
+    {
+        position: {
+            x: 7,
+            y: 1,
+        },
+        symbol: {
+            symbol: SymbolEnum.hash,
+            color: ColorEnum.orange
+        }
+    },
+
     {
         position: {
             x: 1,
@@ -63,16 +74,7 @@ const tilesOnBoard: TileData[] = [
             color: ColorEnum.orange
         }
     },
-    {
-        position: {
-            x: 3,
-            y: 2
-        },
-        symbol: {
-            symbol: SymbolEnum.hash,
-            color: ColorEnum.orange
-        }
-    },
+
     {
         position: {
             x: 2,
@@ -83,6 +85,17 @@ const tilesOnBoard: TileData[] = [
             color: ColorEnum.orange
         }
     },
+    {
+        position: {
+            x: 4,
+            y: 3,
+        },
+        symbol: {
+            symbol: SymbolEnum.circle,
+            color: ColorEnum.blue
+        }
+    },
+
     {
         position: {
             x: 2,
@@ -122,8 +135,8 @@ const tilesOnBoard: TileData[] = [
             symbol: SymbolEnum.leaf,
             color: ColorEnum.red
         }
-    }
+    },
 ];
 
-const data1: TileData[] = createDefaultTestField(9, tilesOnBoard);
-export { data1 };
+const data3: TileData[] = createDefaultTestField(9, tilesOnBoard);
+export { data3 };

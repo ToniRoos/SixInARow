@@ -1,11 +1,11 @@
-import { ColorEnum, SymbolEnum, TileData } from '../../../types';
-import { createDefaultTestField } from './createDefaultTestField';
+import { SymbolEnum, ColorEnum, TileData } from "../../../../types";
+import { createDefaultTestField } from "../../../board/fixtures/createDefaultTestField";
 
-export const tilesOnBoard = [
+const tilesOnBoard: TileData[] = [
     {
         position: {
             x: 2,
-            y: 1
+            y: 1,
         },
         symbol: {
             symbol: SymbolEnum.hash,
@@ -15,7 +15,7 @@ export const tilesOnBoard = [
     {
         position: {
             x: 3,
-            y: 1
+            y: 1,
         },
         symbol: {
             symbol: SymbolEnum.hash,
@@ -25,7 +25,7 @@ export const tilesOnBoard = [
     {
         position: {
             x: 4,
-            y: 1
+            y: 1,
         },
         symbol: {
             symbol: SymbolEnum.hash,
@@ -35,7 +35,7 @@ export const tilesOnBoard = [
     {
         position: {
             x: 5,
-            y: 1
+            y: 1,
         },
         symbol: {
             symbol: SymbolEnum.hash,
@@ -45,7 +45,7 @@ export const tilesOnBoard = [
     {
         position: {
             x: 1,
-            y: 2
+            y: 2,
         },
         symbol: {
             symbol: SymbolEnum.star1,
@@ -55,7 +55,7 @@ export const tilesOnBoard = [
     {
         position: {
             x: 2,
-            y: 2
+            y: 2,
         },
         symbol: {
             symbol: SymbolEnum.square,
@@ -64,8 +64,18 @@ export const tilesOnBoard = [
     },
     {
         position: {
+            x: 3,
+            y: 2
+        },
+        symbol: {
+            symbol: SymbolEnum.hash,
+            color: ColorEnum.orange
+        }
+    },
+    {
+        position: {
             x: 2,
-            y: 3
+            y: 3,
         },
         symbol: {
             symbol: SymbolEnum.circle,
@@ -74,18 +84,8 @@ export const tilesOnBoard = [
     },
     {
         position: {
-            x: 4,
-            y: 3
-        },
-        symbol: {
-            symbol: SymbolEnum.circle,
-            color: ColorEnum.blue
-        }
-    },
-    {
-        position: {
             x: 2,
-            y: 4
+            y: 4,
         },
         symbol: {
             symbol: SymbolEnum.leaf,
@@ -95,7 +95,7 @@ export const tilesOnBoard = [
     {
         position: {
             x: 3,
-            y: 4
+            y: 4,
         },
         symbol: {
             symbol: SymbolEnum.leaf,
@@ -105,7 +105,7 @@ export const tilesOnBoard = [
     {
         position: {
             x: 4,
-            y: 4
+            y: 4,
         },
         symbol: {
             symbol: SymbolEnum.leaf,
@@ -115,7 +115,7 @@ export const tilesOnBoard = [
     {
         position: {
             x: 5,
-            y: 4
+            y: 4,
         },
         symbol: {
             symbol: SymbolEnum.leaf,
@@ -124,5 +124,5 @@ export const tilesOnBoard = [
     }
 ];
 
-const data2: TileData[] = createDefaultTestField(9, tilesOnBoard);
-export { data2 };
+const data1: TileData[] = createDefaultTestField(9, tilesOnBoard);
+export { data1 };

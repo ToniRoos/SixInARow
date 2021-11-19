@@ -18,11 +18,8 @@ const checkMove = (gameState: GameState, id: string, tileToMove: TileData): bool
     let tilesOnTurn = sessionData ? sessionData.tilesOnTurn : [];
 
     const tilesOnTurnPosition: TilePosition[] = tilesOnTurn.map(tile => ({ ...tile.position }));
-    const allowMove = checkMoveForAlreadyPlayedTilesOfTurn(tilesOnTurnPosition, tileOnBoard.position);
+    const allowMove = checkMoveForAlreadyPlayedTilesOfTurn(tilesOnBoard, tilesOnTurnPosition, tileOnBoard.position);
 
-    // if (allowMove && tilesOnTurn.length === 0) {
-    //     // const allowMoveForRow = tilesAtBoard.filter(tile => tile.x = tileToMove.x && Math.abs(tile.y - tileToMove.y) === 1)
-    // }
     return allowMove;
 }
 
