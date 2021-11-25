@@ -32,12 +32,12 @@ const Waiting = () => {
 
     const buttonDisabled = data.players.length <= 1;
 
-    return <div className={`vh-100 d-flex flex-column align-items-center justify-content-center bg-${color1}`}>
+    return (
         <Modal>
             <PlayersList players={data.players} />
             <Button title="Start Game" disabled={buttonDisabled} onClick={refetch} />
         </Modal>
-    </div>
-}
+    );
+};
 
 export default Waiting;

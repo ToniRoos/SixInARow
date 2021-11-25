@@ -1,7 +1,6 @@
 
 import * as React from 'react';
 import { useQuery } from 'react-query';
-import { color1 } from '../../types';
 import { addPlayer } from '../api/api';
 import { useAppRouter } from '../routing/useAppRouter';
 import { useAppContext } from '../useAppContext';
@@ -30,12 +29,10 @@ const Login: React.FunctionComponent = () => {
     const buttonDisabled = name === "";
 
     return (
-        <div className={`vh-100 d-flex flex-column align-items-center justify-content-center bg-${color1}`}>
-            <Modal>
-                <UserInput onInput={setName} />
-                <Button title="Join Game" disabled={buttonDisabled} onClick={refetch} />
-            </Modal>
-        </div>
+        <Modal>
+            <UserInput onInput={setName} />
+            <Button title="Join Game" disabled={buttonDisabled} onClick={refetch} />
+        </Modal>
     );
 };
 

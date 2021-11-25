@@ -34,7 +34,7 @@ const Board = () => {
     }
 
     return (
-        <div className="vh-100 d-flex flex-column align-items-center">
+        <React.Fragment>
             <StatusText statusText={activeTurn ? "It's your turn" : `It's turn of ${activePlayer}`} />
             <PlayingField sizeX={board.sizeX} sizeY={board.sizeY} tileSize={tileSize} >
                 <PlayingFieldList tileSize={tileSize} tiles={board.tiles} onDropped={checkTileForMove} />
@@ -43,7 +43,7 @@ const Board = () => {
                 tilesOnHand={tilesOnHand}
                 turnActive={activeTurn}
                 onNextButtonClicked={handleNextButtonClick} />
-        </div>
+        </React.Fragment>
     );
 };
 

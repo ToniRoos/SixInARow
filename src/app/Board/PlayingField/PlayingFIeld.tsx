@@ -9,7 +9,7 @@ export interface PlayingFieldProps {
 const PlayingField: React.FunctionComponent<PlayingFieldProps> = ({ tileSize, sizeX, sizeY, children }) => {
 
     return (
-        <div className="d-flex flex-grow-1 align-items-center" style={{ paddingBottom: "110px" }}>
+        <div className="vh-100 d-flex flex-grow-1 align-items-center">
             <div className="d-flex flex-wrap"
                 style={{ width: `${sizeX * tileSize}px`, height: `${sizeY * tileSize}px` }}>
                 {children}

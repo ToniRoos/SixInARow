@@ -3,6 +3,7 @@ import { SymbolSwitch } from '../components/SymbolSwitch';
 import { TileData } from '../../../types';
 import { Draggable } from '../components/Draggable';
 import { TilePositionContainer } from '../components/TilePositionContainer';
+import { TileStyleContainer } from '../components/TileStyleContainer';
 
 export interface TileProps {
     tileData: TileData;
@@ -22,14 +23,17 @@ const StockField = (props: TileProps) => {
             allowDrag={props.allowDrag}
             onDragStart={(event) => handleDrag(event)}
         >
-            <TilePositionContainer
+            {/* <TilePositionContainer
                 active={true}
                 tilePosition={props.tileData.position}
                 tileFilled={props.tileData.symbol && true}
-                tileSize={props.tileSize}
-            >
+                tileSize={prop
+                    s.tileSize}
+            > */}
+            <TileStyleContainer active={true} tileFilled={true}>
                 <SymbolSwitch {...props.tileData.symbol!} tileSize={props.tileSize!} />
-            </TilePositionContainer>
+            </TileStyleContainer>
+            {/* </TilePositionContainer> */}
         </Draggable>
     );
 }

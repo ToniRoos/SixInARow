@@ -4,16 +4,24 @@ import { stockConfig } from "../../tileStock/stockConfig";
 
 const checkMoveForAlreadyPlayedTilesOfTurn = (allTilesOnBoard: TileData[], playedTilesOnTurn: TilePosition[], actualPlayPosition: TilePosition): boolean => {
 
-    const playedTilesAmount = playedTilesOnTurn.length;
+    const playedTilesOnTurnAmount = playedTilesOnTurn.length;
     let retVal = false;
 
-    if (playedTilesAmount === 0) {
+    if (playedTilesOnTurnAmount === 0) {
+        console.log(`Points: ${1}`);
         return true;
     }
 
     if (allTilesOnBoard.filter(tile => tile.symbol).length === playedTilesOnTurn.length) {
-        return playedTilesOnTurn.every(tile => tile.x === actualPlayPosition.x)
+
+        const moveAllowed = playedTilesOnTurn.every(tile => tile.x === actualPlayPosition.x)
             || playedTilesOnTurn.every(tile => tile.y === actualPlayPosition.y);
+
+        if (moveAllowed) {
+            console.log(`Points: ${playedTilesOnTurn.length + 1}`);
+        }
+
+        return moveAllowed;
     }
 
     const firstPlayedTileOnTurn: TilePosition = playedTilesOnTurn[0];
@@ -92,12 +100,16 @@ const checkAllTilesBetweenFirstPlayedTileOnTurnAndActualPlayedTile = (allTilesOn
         }
 
         if (!nextBoardFieldIsEmpty) {
+
+            console.log(`Points: ${1}`);
             isAnyTileOnBoardInSeries = true;
         }
 
         if (nextBoardFieldIsEmpty && noPlayedTileForPosition) {
 
-            console.debug(`Can't drop tile to board, cause of gap [x:${checkX}, y:${checkY}]`)
+            if (moveAllallowed) {
+                console.log(`Points: ${index + 1}`);
+            }
             break;
         }
     }

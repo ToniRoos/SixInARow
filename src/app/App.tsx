@@ -1,12 +1,12 @@
 import React from 'react';
 import { Board } from './Board/Board';
 import Login from './Login/Login';
-import { color1 } from '../types';
 import Waiting from './Waiting/Waiting';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { routes } from './routing/routes';
 import { AppProvider } from './AppContext';
+import { FullScreenContainer } from './components/FullScreenContainer';
 
 const queryClient = new QueryClient();
 
@@ -15,7 +15,7 @@ const App = () => {
     return (
         <AppProvider>
             <QueryClientProvider client={queryClient}>
-                <div className={`vh-100 d-flex flex-column align-items-center justify-content-center bg-${color1}`}>
+                <FullScreenContainer>
                     <BrowserRouter>
                         <Routes>
                             <Route path={routes.login} element={<Login />} />
@@ -23,7 +23,7 @@ const App = () => {
                             <Route path={`/${routes.board}`} element={<Board />} />
                         </Routes>
                     </BrowserRouter>
-                </div>
+                </FullScreenContainer>
             </QueryClientProvider>
         </AppProvider>
     );

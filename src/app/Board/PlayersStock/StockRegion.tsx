@@ -13,14 +13,14 @@ export interface StockRegionProps {
 const StockRegion: React.FunctionComponent<StockRegionProps> = ({ tilesOnHand, turnActive, onNextButtonClicked }) => {
 
     const { setTileSize, tileSize } = useAppContext();
-    const stockStileSize = 80;
+    const stockTileSize = 80;
 
     tilesOnHand = tilesOnHand ? tilesOnHand : [];
     const tilesOnHandRendered = tilesOnHand.map((symbolTile, index) => <StockField
         key={index}
         allowDrag={turnActive}
         tileData={{ position: { x: index, y: 0 }, symbol: symbolTile }}
-        tileSize={stockStileSize}
+        tileSize={stockTileSize}
     />);
 
     const onhandleMinus = () => {
@@ -32,19 +32,19 @@ const StockRegion: React.FunctionComponent<StockRegionProps> = ({ tilesOnHand, t
     }
 
     return (
-        <div style={{ width: `${stockStileSize * tilesOnHandRendered.length}px`, height: `${stockStileSize}px`, position: "fixed", bottom: "0" }} className="d-flex flex-wrap">
-            {tilesOnHandRendered}
-            {turnActive ?
-                <StockButton leftSpace={(stockStileSize * tilesOnHandRendered.length) + 20} onClick={onNextButtonClicked}>
+        <div className="d-flex flex-grow-1 align-items-center">
+            <div className="d-flex flex-wrap">
+                <StockButton onClick={onhandleMinus}>
+                    -
+                </StockButton>
+                <StockButton onClick={onhandlePlus}>
+                    +
+                </StockButton>
+                {tilesOnHandRendered}
+                <StockButton onClick={onNextButtonClicked}>
                     NEXT
                 </StockButton>
-                : undefined}
-            <StockButton leftSpace={(stockStileSize * (tilesOnHandRendered.length + 1)) + 20} onClick={onhandleMinus}>
-                ---
-            </StockButton>
-            <StockButton leftSpace={(stockStileSize * (tilesOnHandRendered.length + 2)) + 20} onClick={onhandlePlus}>
-                +++
-            </StockButton>
+            </div>
         </div>
     );
 }

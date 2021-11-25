@@ -16,9 +16,12 @@
     "@babel/preset-env": "^7.16.0",
     "@babel/preset-react": "^7.16.0",
     "@babel/preset-typescript": "^7.16.0",
+    "@testing-library/jest-dom": "^5.15.1",
+    "@testing-library/react": "^12.1.2",
     "@types/enzyme": "^3.10.10",
     "@types/express": "^4.17.13",
     "@types/jest": "^24.0.13",
+    "@types/jest-sinon": "^1.0.2",
     "@types/jquery": "^3.5.8",
     "@types/lodash": "^4.14.177",
     "@types/node": "^12.20.37",
@@ -38,9 +41,11 @@
     "eslint-plugin-standard": "^4.1.0",
     "html-webpack-plugin": "^5.5.0",
     "jest": "^24.8.0",
+    "jest-sinon": "^1.0.4",
     "node-sass": "^4.12.0",
     "react-testing-library": "^7.0.1",
     "sass-loader": "^7.1.0",
+    "sinon": "^12.0.1",
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.1",
     "ts-jest": "^24.0.2",
@@ -67,8 +72,11 @@
     "ws": "^7.5.5"
   },
   "jest": {
+    "verbose": true,
+    "testURL": "http://localhost:8000",
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
     "transform": {
-      "^.+\\.ts?$": "ts-jest",
+      "^.+\\.tsx?$": "ts-jest",
       "^.+\\.jsx?$": "babel-jest"
     },
     "moduleFileExtensions": [
@@ -76,6 +84,9 @@
       "tsx",
       "js",
       "jsx"
+    ],
+    "setupFilesAfterEnv": [
+      "jest-sinon"
     ]
   }
 }

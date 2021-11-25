@@ -3,6 +3,7 @@ import { SymbolSwitch } from '../components/SymbolSwitch';
 import { TileData } from '../../../types';
 import { Draggable } from '../components/Draggable';
 import { TilePositionContainer } from '../components/TilePositionContainer';
+import { TileStyleContainer } from '../components/TileStyleContainer';
 
 export interface TileProps extends TileData {
     tileSize: number;
@@ -38,16 +39,17 @@ const PlayingFieldTile: React.FunctionComponent<TileProps> = ({ position, symbol
             onDragOver={event => handleAllowDrop(event)}
             onDragLeave={() => setHover(false)}
         >
+
             <TilePositionContainer
-                active={hover}
                 tilePosition={position}
-                tileFilled={symbol && true}
-                tileSize={tileSize}
-            >
-                {symbol
-                    ? <SymbolSwitch {...symbol} tileSize={tileSize} />
-                    : null}
+                tileSize={tileSize}>
+                <TileStyleContainer active={hover} tileFilled={symbol && true}>
+                    {symbol
+                        ? <SymbolSwitch {...symbol} tileSize={tileSize} />
+                        : null}
+                </TileStyleContainer>
             </TilePositionContainer>
+
         </Draggable>
     );
 }
