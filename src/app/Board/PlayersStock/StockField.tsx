@@ -21,19 +21,10 @@ const StockField = (props: TileProps) => {
     return (
         <Draggable
             allowDrag={props.allowDrag}
-            onDragStart={(event) => handleDrag(event)}
-        >
-            {/* <TilePositionContainer
-                active={true}
-                tilePosition={props.tileData.position}
-                tileFilled={props.tileData.symbol && true}
-                tileSize={prop
-                    s.tileSize}
-            > */}
+            onDragStart={(event) => handleDrag(event)}>
             <TileStyleContainer active={true} tileFilled={true}>
                 <SymbolSwitch {...props.tileData.symbol!} tileSize={props.tileSize!} />
             </TileStyleContainer>
-            {/* </TilePositionContainer> */}
         </Draggable>
     );
 }

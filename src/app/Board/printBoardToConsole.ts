@@ -1,4 +1,4 @@
-import { TileData, TilePosition } from "../../types";
+import { TileData } from "../../types";
 
 const printBoardToConsole = (board: TileData[], tilesToBePlaced?: TileData[]) => {
 
